@@ -102,15 +102,34 @@
   }
 
   /* ---------- infopanel ---------- */
+  var selId = null, MQ2 = '(min-width:800px) and (max-width:990px) and (min-aspect-ratio:4/5) and (max-aspect-ratio:5/4)';
+  function tvapanel() {
+    try { return !!(window.matchMedia && (window.matchMedia(MQ2).matches || window.matchMedia('(horizontal-viewport-segments: 2)').matches)); } catch (e) { return false; }
+  }
+  function kortAt(x, i, n) {
+    var c = el('div', 'atkort p-' + x.prio), h = el('div', 'atkh'), kn;
+    h.appendChild(el('span', 'atnr', String(i + 1) + '/' + n));
+    h.appendChild(el('span', 'atpill ' + x.prio, PRIN[x.prio] || x.prio));
+    h.appendChild(el('span', 'atpill kat', KATN[x.kategori] || x.kategori));
+    h.appendChild(el('span', 'atpill kal', x.kalla));
+    h.appendChild(el('span', 'attid', sedan(x.uppdaterad)));
+    c.appendChild(h);
+    c.appendChild(el('div', 'attitel', x.titel));
+    c.appendChild(forklaring(x.forklaring));
+    kn = el('button', 'atklar', 'Markera klar');
+    kn.type = 'button'; kn.onclick = function () { klar(x); };
+    c.appendChild(kn);
+    return c;
+  }
   function ritaSheet() {
-    var ov = document.getElementById('atov'), lst, items, hdr, app, sc;
+    var ov = document.getElementById('atov'), lst, items, hdr, app, sc, sc2, two = tvapanel(), nav, det, sel = null, i;
     if (!ov || !sheetApp) { return; }
-    lst = ov.querySelector('.atlist');
-    sc = lst ? lst.scrollTop : 0;
+    lst = ov.querySelector('.atlist'); nav = ov.querySelector('.atnav');
+    sc = lst ? lst.scrollTop : 0; sc2 = nav ? nav.scrollTop : 0;
     ov.innerHTML = '';
     app = opts.vilkenApp(sheetApp) || { namn: sheetApp, ikon: '' };
     items = forApp(sheetApp).sort(function (a, b) { return t(b.uppdaterad) - t(a.uppdaterad); });
-    var sh = el('div', 'atsheet');
+    var sh = el('div', 'atsheet' + (two ? ' at2' : ''));
     sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-label', 'Åtgärder för ' + app.namn);
     sh.onclick = function (e) { if (e && e.stopPropagation) { e.stopPropagation(); } };
     hdr = el('div', 'athdr');
@@ -120,23 +139,29 @@
     hdr.appendChild(cl);
     sh.appendChild(hdr);
     if (msg) { sh.appendChild(el('p', 'atmsg', msg)); }
+    if (two && items.length) {
+      for (i = 0; i < items.length; i++) { if (items[i].id === selId) { sel = i; } }
+      if (sel === null) { sel = 0; selId = items[0].id; }
+      var body = el('div', 'at2body');
+      nav = el('div', 'atnav'); det = el('div', 'atlist atdet');
+      items.forEach(function (x, k) {
+        var b = el('button', 'atnavb p-' + x.prio + (k === sel ? ' pa' : ''));
+        b.type = 'button';
+        b.appendChild(el('span', 'atnavt', (k + 1) + '. ' + x.titel));
+        b.appendChild(el('span', 'atnavs', (KATN[x.kategori] || '') + ' · ' + sedan(x.uppdaterad)));
+        b.onclick = function () { selId = x.id; sc = 0; ritaSheet(); };
+        nav.appendChild(b);
+      });
+      det.appendChild(kortAt(items[sel], sel, items.length));
+      body.appendChild(nav); body.appendChild(det);
+      sh.appendChild(body);
+      ov.appendChild(sh);
+      nav.scrollTop = sc2; det.scrollTop = sc;
+      return;
+    }
     lst = el('div', 'atlist');
     if (!items.length) { lst.appendChild(el('p', 'atmsg', 'Inget kvar att göra här. Bra jobbat!')); }
-    items.forEach(function (x, i) {
-      var c = el('div', 'atkort p-' + x.prio), h = el('div', 'atkh'), kn;
-      h.appendChild(el('span', 'atnr', String(i + 1) + '/' + items.length));
-      h.appendChild(el('span', 'atpill ' + x.prio, PRIN[x.prio] || x.prio));
-      h.appendChild(el('span', 'atpill kat', KATN[x.kategori] || x.kategori));
-      h.appendChild(el('span', 'atpill kal', x.kalla));
-      h.appendChild(el('span', 'attid', sedan(x.uppdaterad)));
-      c.appendChild(h);
-      c.appendChild(el('div', 'attitel', x.titel));
-      c.appendChild(forklaring(x.forklaring));
-      kn = el('button', 'atklar', 'Markera klar');
-      kn.type = 'button'; kn.onclick = function () { klar(x); };
-      c.appendChild(kn);
-      lst.appendChild(c);
-    });
+    items.forEach(function (x, k) { lst.appendChild(kortAt(x, k, items.length)); });
     sh.appendChild(lst);
     ov.appendChild(sh);
     lst.scrollTop = sc;
@@ -246,6 +271,18 @@
     opts = o;
     ladda();
     if (!timer) { timer = setInterval(ladda, 60000); }
+    var rt = null, lastTwo = tvapanel();
+    function vv() { try { var h = window.visualViewport ? window.visualViewport.height : window.innerHeight; document.documentElement.style.setProperty('--vvh', Math.round(h) + 'px'); } catch (e) {} }
+    function efterResize() {
+      vv();
+      clearTimeout(rt);
+      rt = setTimeout(function () { var n = tvapanel(); if (sheetApp && n !== lastTwo) { ritaSheet(); } lastTwo = n; }, 120);
+    }
+    vv();
+    window.addEventListener('resize', efterResize);
+    window.addEventListener('orientationchange', efterResize);
+    if (window.visualViewport) { window.visualViewport.addEventListener('resize', efterResize); }
+    try { var mq = window.matchMedia('(horizontal-viewport-segments: 2)'); if (mq.addEventListener) { mq.addEventListener('change', efterResize); } } catch (e) {}
     document.addEventListener('visibilitychange', function () { if (!document.hidden) { ladda(); } });
   }
   window.HS_AT = { init: init, dekorera: dekorera, matcha: matcha, sok: sok, cmp: cmp, nyligen: nyligen, bar: bar, recent: recent, aktiv: function () { return atf; } };

@@ -25,6 +25,7 @@ const FILER = {
   '/js/pbkdf2.js': 'text/javascript; charset=utf-8',
   '/js/atgarder.js': 'text/javascript; charset=utf-8',
   '/atgarder.css': 'text/css; charset=utf-8',
+  '/responsiv.css': 'text/css; charset=utf-8',
 };
 const CONFIG_JS = 'window.HS_CFG={login:false,logout:"logga-ut"};\n';
 fs.mkdirSync(path.join(ROT, 'data'), { recursive: true });

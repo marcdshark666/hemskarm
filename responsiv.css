@@ -1,0 +1,37 @@
+/* Skärmstorlekar: Galaxy Z Fold 7 (hopfälld ~360-412 px, uppfälld ~800-990 px, nästan kvadratisk), surfplatta, desktop.
+   iPad (768x1024, 1024x768) är oförändrad: reglerna nedan startar bara <=520 px eller i fold-intervallet. */
+button,a,.fknapp,.liten{touch-action:manipulation}
+.atlist,.atnav,.atsheet{overscroll-behavior:contain}
+.vy{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+.atov{bottom:auto;height:var(--vvh,100%)}
+.atsheet{max-height:calc(var(--vvh,100dvh) * .88)}
+@media (hover:hover){.fknapp:hover,.liten:hover,.atrr:hover{filter:brightness(1.15)}}
+/* hopfälld omslagsskärm och andra smala telefoner */
+@media (max-width:520px){
+  .vy{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+  .verktyg{position:static}
+  .kort .hu .tx,.at-hu .tx{padding-right:60px!important}
+  .at-hu{min-height:128px!important}
+  .atinfo{right:10px;top:64px}
+  .topp{flex-wrap:wrap}
+  .topp .kn{justify-content:flex-start}
+  .atsheet{border-radius:16px 16px 0 0}
+  .atht{font-size:18px}
+}
+/* uppfälld huvudskärm: 3 kolumner, tvåpanelsvy för åtgärder (lista vänster, info höger) */
+@media (min-width:800px) and (max-width:990px) and (min-aspect-ratio:4/5) and (max-aspect-ratio:5/4){
+  .rutnat,.atrecent{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+  .atov{align-items:center}
+  .kort .hu .tx,.at-hu .tx{padding-right:60px!important}
+  .at-hu{min-height:128px!important}
+  .atinfo{right:10px;top:64px}
+  .atsheet.at2{max-width:900px;width:calc(100% - 24px);border-radius:20px}
+}
+.at2body{display:flex;gap:12px;flex:1 1 auto;min-height:0}
+.at2body .atnav{flex:0 0 36%;max-width:320px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.at2body .atdet{flex:1 1 auto;min-width:0}
+.atnavb{display:block;width:100%;min-height:60px;margin:0 0 8px;padding:8px 12px;text-align:left;border:0;border-left:6px solid #6f7a8a;border-radius:12px;background:#1b202a;color:#f2f4f8;font:inherit;-webkit-appearance:none;appearance:none}
+.atnavb.p-hog{border-left-color:#e53935}.atnavb.p-normal{border-left-color:#e8b04b}
+.atnavb.pa{background:#2b3a52;outline:2px solid #4a86d0}
+.atnavt{display:block;font-size:16px;font-weight:800;overflow-wrap:anywhere}
+.atnavs{display:block;font-size:12px;color:#9aa4b5;margin-top:2px}

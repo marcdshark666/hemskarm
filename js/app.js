@@ -181,9 +181,9 @@
     if (dim) { cls = 'lok'; }
     if (dod) { cls = 'dod'; }
     if (!url) { cls = 'plan'; }
-    sub = l.kraver_login ? 'publik, kräver egen inloggning' : l.typ === 'lokal' ? 'bara på datorn' : l.kraver_tailscale ? 'kräver Tailscale' : l.status === 'privat' ? 'kräver GitHub-inloggning' : l.status === 'servern ej igång' ? 'servern ej igång' : l.status === 'gammal adress' ? 'gammal adress' : l.status === 'borttaget' ? 'borttaget' : l.status === 'planerad' ? 'planerad' : dod ? 'ej uppe' : 'publik';
+    sub = l.kraver_login ? (l.kraver_tailscale ? 'kräver Tailscale + inloggning' : 'publik, kräver egen inloggning') : l.typ === 'lokal' ? 'bara på datorn' : l.kraver_tailscale ? 'kräver Tailscale' : l.status === 'privat' ? 'kräver GitHub-inloggning' : l.status === 'servern ej igång' ? 'servern ej igång' : l.status === 'gammal adress' ? 'gammal adress' : l.status === 'borttaget' ? 'borttaget' : l.status === 'planerad' ? 'planerad' : dod ? 'ej uppe' : 'publik';
     c = el(url ? 'a' : 'span', 'chip ' + cls);
-    c.appendChild(document.createTextNode((IKON[l.typ] || '🔗') + ' ' + (NAMN[l.typ] || l.etikett || 'Länk')));
+    c.appendChild(document.createTextNode((l.visa_etikett && l.etikett ? (/^\p{Extended_Pictographic}/u.test(l.etikett) ? '' : (IKON[l.typ] || '🔗') + ' ') + l.etikett : (IKON[l.typ] || '🔗') + ' ' + (NAMN[l.typ] || l.etikett || 'Länk'))));
     c.appendChild(el('small', null, sub));
     if (url) { c.href = url; c.target = nf ? '_blank' : '_self'; if (nf) { c.rel = 'noopener'; } c.title = l.etikett || ''; }
     return c;

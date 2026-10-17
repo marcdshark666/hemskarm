@@ -1,7 +1,7 @@
 {
  "title": "Hemskärm",
- "rev": 11,
- "genererad": "2026-10-17T16:59:21.772Z",
+ "rev": 13,
+ "genererad": "2026-10-17T17:09:33.376Z",
  "kategorier": [
   "Viktiga hemsidor",
   "Medicin & utbildning",
@@ -90,7 +90,9 @@
      "kraver_tailscale": false
     }
    ],
-   "fast_rank": 3
+   "fast_rank": 3,
+   "forhandsvisning": "img/preview/the-work-list.jpg",
+   "suddad": true
   },
   {
    "id": "marcs-halsoai",
@@ -132,7 +134,9 @@
     }
    ],
    "prio": 2,
-   "fast_rank": 6
+   "fast_rank": 6,
+   "forhandsvisning": "img/preview/marcs-halsoai.jpg",
+   "suddad": true
   },
   {
    "id": "print-planer",
@@ -172,7 +176,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/print-planer.jpg",
+   "suddad": true
   },
   {
    "id": "aaron-prints",
@@ -198,7 +204,9 @@
      "kraver_tailscale": false
     }
    ],
-   "fast_rank": 8
+   "fast_rank": 8,
+   "forhandsvisning": "img/preview/aaron-prints.jpg",
+   "suddad": true
   },
   {
    "id": "tailscale-hemsidor",
@@ -225,7 +233,9 @@
      "bara_dator": true
     }
    ],
-   "fast_rank": 5
+   "fast_rank": 5,
+   "forhandsvisning": "img/preview/tailscale-hemsidor.jpg",
+   "suddad": true
   },
   {
    "id": "filer-privat",
@@ -252,7 +262,9 @@
      "bara_dator": true
     }
    ],
-   "fast_rank": 8
+   "fast_rank": 8,
+   "forhandsvisning": "img/preview/filer-privat.jpg",
+   "suddad": true
   },
   {
    "id": "radcore",
@@ -260,8 +272,8 @@
    "ikon": "🩻",
    "kategori": "Medicin & utbildning",
    "senast_aktiv": "2026-10-17T16:18:27.047Z",
-   "beskrivning": "Radiologi med bokbank och kompendium.",
-   "primar": "https://radcore.vercel.app/",
+   "beskrivning": "Radiologi med bokbank, kompendium och Journalträning (privat via Tailscale).",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/radcore/#/journaltraning",
    "lankar": [
     {
      "typ": "vercel",
@@ -269,9 +281,27 @@
      "url": "https://radcore.vercel.app/",
      "status": "uppe",
      "kraver_tailscale": false
+    },
+    {
+     "typ": "tailscale",
+     "etikett": "Tailscale /radcore (privat: Journalträning + Kompendium)",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/radcore/#/journaltraning",
+     "status": "uppe",
+     "kraver_tailscale": true,
+     "kraver_login": true
+    },
+    {
+     "typ": "lokal",
+     "etikett": "127.0.0.1:5205 (bara på datorn)",
+     "url": "http://127.0.0.1:5205/",
+     "status": "uppe",
+     "kraver_tailscale": false,
+     "bara_dator": true
     }
    ],
-   "prio": 3
+   "prio": 3,
+   "forhandsvisning": "img/preview/radcore.jpg",
+   "suddad": true
   },
   {
    "id": "bt-start",
@@ -299,7 +329,9 @@
     }
    ],
    "prio": 4,
-   "fast_rank": 4
+   "fast_rank": 4,
+   "forhandsvisning": "img/preview/bt-start.jpg",
+   "suddad": true
   },
   {
    "id": "medhop",
@@ -340,7 +372,10 @@
      "kraver_tailscale": false
     }
    ],
-   "prio": 2
+   "prio": 2,
+   "forhandsvisning": "img/preview/medhop.jpg",
+   "suddad": true,
+   "login_sida": true
   },
   {
    "id": "cynergi-med-flow",
@@ -395,7 +430,9 @@
      "status": "planerad"
     }
    ],
-   "prio": 1
+   "prio": 1,
+   "forhandsvisning": "img/preview/cynergi-med-flow.jpg",
+   "suddad": true
   },
   {
    "id": "bambu-elegoo-profiler",
@@ -432,7 +469,9 @@
      "bara_dator": true
     }
    ],
-   "prio": 3
+   "prio": 3,
+   "forhandsvisning": "img/preview/vanner.jpg",
+   "suddad": true
   },
   {
    "id": "uppdateringsvakt",
@@ -484,7 +523,10 @@
     }
    ],
    "prio": 1,
-   "fast_rank": 7
+   "fast_rank": 7,
+   "forhandsvisning": "img/preview/husvakten.jpg",
+   "suddad": true,
+   "login_sida": true
   },
   {
    "id": "manadsavrakning",
@@ -511,7 +553,9 @@
      "bara_dator": true
     }
    ],
-   "prio": 1
+   "prio": 1,
+   "forhandsvisning": "img/preview/manadsavrakning.jpg",
+   "suddad": true
   },
   {
    "id": "quiz-runner",
@@ -549,7 +593,9 @@
    "beskrivning": "Slumpar fram en restaurang att äta på.",
    "primar": "",
    "lankar": [],
-   "prio": 3
+   "prio": 3,
+   "forhandsvisning": "img/preview/restaurang-roulette.jpg",
+   "login_sida": true
   },
   {
    "id": "server-uppdaterare",
@@ -597,7 +643,9 @@
     }
    ],
    "prio": 1,
-   "fast_rank": 1
+   "fast_rank": 1,
+   "forhandsvisning": "img/preview/boss.jpg",
+   "suddad": true
   },
   {
    "id": "work-list-bots",
@@ -624,7 +672,9 @@
      "bara_dator": true
     }
    ],
-   "fast_rank": 2
+   "fast_rank": 2,
+   "forhandsvisning": "img/preview/work-list-bots.jpg",
+   "suddad": true
   },
   {
    "id": "skarmstyrning",
@@ -661,7 +711,9 @@
      "bara_dator": true
     }
    ],
-   "prio": 2
+   "prio": 2,
+   "forhandsvisning": "img/preview/spelkontroll.jpg",
+   "suddad": true
   },
   {
    "id": "gadget-drop",
@@ -719,7 +771,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/marcs-resell.jpg",
+   "suddad": true
   },
   {
    "id": "kalender-bradet",
@@ -745,7 +799,8 @@
      "kraver_tailscale": false
     }
    ],
-   "forhandsvisning": "img/preview/kalender-bradet.jpg"
+   "forhandsvisning": "img/preview/kalender-bradet.jpg",
+   "login_sida": true
   },
   {
    "id": "skrivbordet",
@@ -755,7 +810,9 @@
    "senast_aktiv": "2026-10-12T07:39:04.608Z",
    "beskrivning": "Se datorns skärm live från mobilen.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "forhandsvisning": "img/preview/skrivbordet.jpg",
+   "suddad": true
   },
   {
    "id": "dexcom-reklamations-assistent",
@@ -773,7 +830,10 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/dexcom-reklamations-assistent.jpg",
+   "suddad": true,
+   "login_sida": true
   },
   {
    "id": "forelasningar",
@@ -799,7 +859,9 @@
      "kraver_tailscale": false
     }
    ],
-   "prio": 4
+   "prio": 4,
+   "forhandsvisning": "img/preview/forelasningar.jpg",
+   "suddad": true
   },
   {
    "id": "plaud-kalender",
@@ -818,7 +880,9 @@
      "kraver_tailscale": false
     }
    ],
-   "prio": 4
+   "prio": 4,
+   "forhandsvisning": "img/preview/plaud-kalender.jpg",
+   "suddad": true
   },
   {
    "id": "plaud-syncthing",
@@ -829,7 +893,9 @@
    "beskrivning": "Synk av PLAUD-filer via Syncthing.",
    "primar": "",
    "lankar": [],
-   "prio": 4
+   "prio": 4,
+   "forhandsvisning": "img/preview/plaud-syncthing.jpg",
+   "suddad": true
   },
   {
    "id": "squat-counter",
@@ -839,7 +905,9 @@
    "senast_aktiv": "2026-10-04T10:11:45.000Z",
    "beskrivning": "Räknar knäböj.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "forhandsvisning": "img/preview/squat-counter.jpg",
+   "suddad": true
   },
   {
    "id": "3d-sida-objekt",
@@ -885,7 +953,9 @@
      "kraver_tailscale": false,
      "bara_dator": true
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/olasta-meddelanden.jpg",
+   "suddad": true
   },
   {
    "id": "sugar-buddy-bot",
@@ -903,7 +973,10 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 2,
+   "forhandsvisning": "img/preview/sugar-buddy-bot.jpg",
+   "suddad": true
   },
   {
    "id": "svenska-ord",
@@ -929,6 +1002,7 @@
      "kraver_tailscale": false
     }
    ],
+   "prio": 3,
    "forhandsvisning": "img/preview/svenska-ord.jpg"
   },
   {
@@ -965,7 +1039,9 @@
      "kraver_tailscale": false
     }
    ],
-   "forhandsvisning": "img/preview/inbox-zero-hero.jpg"
+   "prio": 3,
+   "forhandsvisning": "img/preview/inbox-zero-hero.jpg",
+   "login_sida": true
   },
   {
    "id": "3dcal",
@@ -1000,7 +1076,9 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/ddxai.jpg",
+   "suddad": true
   },
   {
    "id": "jobbans-kandrswe",
@@ -1033,7 +1111,8 @@
      "kraver_tailscale": false
     }
    ],
-   "forhandsvisning": "img/preview/jobbans-kandrswe.jpg"
+   "forhandsvisning": "img/preview/jobbans-kandrswe.jpg",
+   "suddad": true
   },
   {
    "id": "idea-autopilot",
@@ -1073,7 +1152,9 @@
    "senast_aktiv": "2026-09-06T22:07:41.995Z",
    "beskrivning": "Konsensus och evidens, MedVeta.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "forhandsvisning": "img/preview/openevidence-consensus-medveta.jpg",
+   "suddad": true
   },
   {
    "id": "ward-rush",
@@ -1125,7 +1206,9 @@
      "kraver_tailscale": false
     }
    ],
-   "forhandsvisning": "img/preview/session-tracker.jpg"
+   "forhandsvisning": "img/preview/session-tracker.jpg",
+   "suddad": true,
+   "login_sida": true
   },
   {
    "id": "packing-road",
@@ -1143,7 +1226,10 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/packing-road.jpg",
+   "suddad": true,
+   "login_sida": true
   },
   {
    "id": "rostagent",
@@ -1163,7 +1249,8 @@
    "senast_aktiv": "2026-08-23T09:08:25.722Z",
    "beskrivning": "Övervakning av system och aktivitet.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "forhandsvisning": "img/preview/vakttornet.jpg"
   },
   {
    "id": "tornet",
@@ -1234,7 +1321,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/spindelnatet.jpg",
+   "suddad": true
   },
   {
    "id": "cv-claude-dar",
@@ -1252,7 +1341,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/cv-claude-dar.jpg",
+   "suddad": true
   },
   {
    "id": "hemmaracet",
@@ -1262,7 +1353,9 @@
    "senast_aktiv": "2026-08-07T23:10:08.571Z",
    "beskrivning": "Hemmatävling.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "forhandsvisning": "img/preview/hemmaracet.jpg",
+   "login_sida": true
   },
   {
    "id": "tangentbordsapp-dar-skriva",
@@ -1298,7 +1391,9 @@
    "senast_aktiv": "2026-08-05T23:07:14.005Z",
    "beskrivning": "Swipa igenom PubMed-artiklar.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "forhandsvisning": "img/preview/pubmed-applikation-swipa.jpg",
+   "suddad": true
   },
   {
    "id": "telegram-autocommit",
@@ -1326,7 +1421,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/ovningsportal-bt-folk.jpg",
+   "suddad": true
   },
   {
    "id": "synergy-application-regarding",
@@ -1344,7 +1441,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/synergy-application-regarding.jpg",
+   "suddad": true
   },
   {
    "id": "gmail-improvement-sliding",
@@ -1362,7 +1461,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/gmail-improvement-sliding.jpg",
+   "suddad": true
   },
   {
    "id": "kalender-skogen",
@@ -1372,7 +1473,8 @@
    "senast_aktiv": "2026-08-02T22:09:42.218Z",
    "beskrivning": "Kalender visualiserad som skog.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "forhandsvisning": "img/preview/kalender-skogen.jpg"
   },
   {
    "id": "fondkompassen",
@@ -1400,7 +1502,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/cv-portal.jpg",
+   "suddad": true
   },
   {
    "id": "us-proxy-browser",
@@ -1419,7 +1523,8 @@
      "kraver_tailscale": false
     }
    ],
-   "forhandsvisning": "img/preview/us-proxy-browser.jpg"
+   "forhandsvisning": "img/preview/us-proxy-browser.jpg",
+   "login_sida": true
   },
   {
    "id": "stockholm-dag",
@@ -1457,7 +1562,8 @@
      "kraver_tailscale": false
     }
    ],
-   "forhandsvisning": "img/preview/live-oversattare-samtal.jpg"
+   "forhandsvisning": "img/preview/live-oversattare-samtal.jpg",
+   "suddad": true
   },
   {
    "id": "klinisk-evidens",
@@ -1475,7 +1581,10 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 3,
+   "forhandsvisning": "img/preview/klinisk-evidens.jpg",
+   "suddad": true
   },
   {
    "id": "allinclusive-finder",
@@ -1526,7 +1635,10 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 2,
+   "forhandsvisning": "img/preview/lilianas-salud.jpg",
+   "suddad": true
   },
   {
    "id": "gym-3d-streaks",
@@ -1544,7 +1656,9 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/gym-3d-streaks.jpg",
+   "suddad": true
   },
   {
    "id": "bertils-halsoai",
@@ -1562,7 +1676,10 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 2,
+   "forhandsvisning": "img/preview/bertils-halsoai.jpg",
+   "suddad": true
   },
   {
    "id": "botlabbet",
@@ -1602,7 +1719,9 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/botlabbet.jpg",
+   "suddad": true
   },
   {
    "id": "resolve-claude-mcp",
@@ -1648,7 +1767,10 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 3,
+   "forhandsvisning": "img/preview/kliniskt.jpg",
+   "suddad": true
   },
   {
    "id": "medicinskt-snurrhjul",
@@ -1685,7 +1807,10 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 2,
+   "forhandsvisning": "img/preview/ada-zdrowa.jpg",
+   "suddad": true
   },
   {
    "id": "vanskapsapp",
@@ -1703,7 +1828,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/vanskapsapp.jpg",
+   "suddad": true
   },
   {
    "lankar": [
@@ -1730,7 +1857,8 @@
    "ikon": "🖨️",
    "beskrivning": "Produkter och Pop-Up-butik.",
    "primar": "https://printify.com/app/",
-   "ny_flik": true
+   "ny_flik": true,
+   "forhandsvisning": "img/preview/printify.jpg"
   },
   {
    "lankar": [

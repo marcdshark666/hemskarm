@@ -289,13 +289,16 @@ let ut = lista.filter((a) => !dolda.has(a.id)).map((a) => {
   return r;
 });
 for (const n of man.nya || []) if (n && n.id && !ut.find((a) => a.id === n.id)) ut.push({ lankar: [], kategori: 'Övrigt', ...n });
-// Förhandsvisning: bara om img/preview/<id>.jpg finns och appen inte är känslig (annars platshållare i UI).
-const KANSLIG_KAT = new Set(['Diabetes & hälsa', 'Ekonomi & affär', 'Viktiga hemsidor']);
-const KANSLIG_ID = new Set(['husvakten', 'marcs-halsoai', 'radcore', 'bt-start', 'medhop', 'cynergi-med-flow', 'gadget-drop', 'botlabbet', 'packing-road', 'vanskapsapp', 'gmail-improvement-sliding', 'spindelnatet']);
+// Förhandsvisning: img/preview/<id>.jpg om den finns (känsliga är suddade av tools/skarmbilder.py, metadata i _meta.json). gadget-drop får aldrig.
+const PV_META = lasJson(path.join(HEM, 'img', 'preview', '_meta.json'), {});
 for (const x of ut) {
   const f = path.join(HEM, 'img', 'preview', x.id + '.jpg');
-  if (fs.existsSync(f) && !KANSLIG_KAT.has(x.kategori) && !KANSLIG_ID.has(x.id)) x.forhandsvisning = 'img/preview/' + x.id + '.jpg';
-  else delete x.forhandsvisning;
+  if (fs.existsSync(f) && x.id !== 'gadget-drop') {
+    x.forhandsvisning = 'img/preview/' + x.id + '.jpg';
+    const m = PV_META[x.id] || {};
+    if (m.blur) x.suddad = true; else delete x.suddad;
+    if (m.login) x.login_sida = true; else delete x.login_sida;
+  } else { delete x.forhandsvisning; delete x.suddad; delete x.login_sida; }
 }
 ut.sort((a, b) => String(b.senast_aktiv || '').localeCompare(String(a.senast_aktiv || '')));
 

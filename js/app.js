@@ -211,6 +211,7 @@
         im.src = a.forhandsvisning; im.loading = 'lazy'; im.width = 160; im.height = 120;
         im.alt = 'Förhandsvisning av ' + (a.namn || a.id);
         pv.appendChild(im);
+        if (a.suddad) { pv.appendChild(el('span', 'sud', '🔒 suddad')); } else if (a.login_sida) { pv.appendChild(el('span', 'sud', 'login')); }
       } else {
         pv.style.background = 'linear-gradient(135deg,' + (FARG[a.kategori] || '#3a6ea5') + ',#1b202a)';
         pv.appendChild(el('span', 'pi', a.ikon || '⭐'));

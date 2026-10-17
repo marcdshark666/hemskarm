@@ -1,7 +1,7 @@
 {
  "title": "Hemskärm",
- "rev": 10,
- "genererad": "2026-10-17T16:47:41.118Z",
+ "rev": 11,
+ "genererad": "2026-10-17T16:59:21.772Z",
  "kategorier": [
   "Viktiga hemsidor",
   "Medicin & utbildning",
@@ -48,6 +48,7 @@
      "kraver_tailscale": false
     }
    ],
+   "prio": 1,
    "fast_rank": 5
   },
   {
@@ -130,6 +131,7 @@
      "kraver_tailscale": false
     }
    ],
+   "prio": 2,
    "fast_rank": 6
   },
   {
@@ -268,7 +270,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 3
   },
   {
    "id": "bt-start",
@@ -295,6 +298,7 @@
      "bara_dator": true
     }
    ],
+   "prio": 4,
    "fast_rank": 4
   },
   {
@@ -335,7 +339,8 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 2
   },
   {
    "id": "cynergi-med-flow",
@@ -389,7 +394,8 @@
      "url": "",
      "status": "planerad"
     }
-   ]
+   ],
+   "prio": 1
   },
   {
    "id": "bambu-elegoo-profiler",
@@ -425,7 +431,8 @@
      "kraver_tailscale": false,
      "bara_dator": true
     }
-   ]
+   ],
+   "prio": 3
   },
   {
    "id": "uppdateringsvakt",
@@ -476,6 +483,7 @@
      "kraver_tailscale": false
     }
    ],
+   "prio": 1,
    "fast_rank": 7
   },
   {
@@ -502,7 +510,8 @@
      "kraver_tailscale": false,
      "bara_dator": true
     }
-   ]
+   ],
+   "prio": 1
   },
   {
    "id": "quiz-runner",
@@ -527,7 +536,9 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 2,
+   "forhandsvisning": "img/preview/quiz-runner.jpg"
   },
   {
    "id": "restaurang-roulette",
@@ -537,7 +548,8 @@
    "senast_aktiv": "2026-10-17T03:20:01.431Z",
    "beskrivning": "Slumpar fram en restaurang att äta på.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "prio": 3
   },
   {
    "id": "server-uppdaterare",
@@ -584,6 +596,7 @@
      "bara_dator": true
     }
    ],
+   "prio": 1,
    "fast_rank": 1
   },
   {
@@ -647,7 +660,8 @@
      "kraver_tailscale": false,
      "bara_dator": true
     }
-   ]
+   ],
+   "prio": 2
   },
   {
    "id": "gadget-drop",
@@ -730,7 +744,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/kalender-bradet.jpg"
   },
   {
    "id": "skrivbordet",
@@ -783,7 +798,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 4
   },
   {
    "id": "plaud-kalender",
@@ -801,7 +817,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "prio": 4
   },
   {
    "id": "plaud-syncthing",
@@ -811,7 +828,8 @@
    "senast_aktiv": "2026-10-04T12:03:42.741Z",
    "beskrivning": "Synk av PLAUD-filer via Syncthing.",
    "primar": "",
-   "lankar": []
+   "lankar": [],
+   "prio": 4
   },
   {
    "id": "squat-counter",
@@ -910,7 +928,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/svenska-ord.jpg"
   },
   {
    "id": "startup-admin-boost",
@@ -945,7 +964,8 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/inbox-zero-hero.jpg"
   },
   {
    "id": "3dcal",
@@ -1012,7 +1032,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/jobbans-kandrswe.jpg"
   },
   {
    "id": "idea-autopilot",
@@ -1077,7 +1098,8 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/ward-rush.jpg"
   },
   {
    "id": "session-tracker",
@@ -1102,7 +1124,8 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/session-tracker.jpg"
   },
   {
    "id": "packing-road",
@@ -1264,7 +1287,8 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/tangentbordsapp-dar-skriva.jpg"
   },
   {
    "id": "pubmed-applikation-swipa",
@@ -1394,7 +1418,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/us-proxy-browser.jpg"
   },
   {
    "id": "stockholm-dag",
@@ -1412,7 +1437,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/stockholm-dag.jpg"
   },
   {
    "id": "live-oversattare-samtal",
@@ -1430,7 +1456,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/live-oversattare-samtal.jpg"
   },
   {
    "id": "klinisk-evidens",
@@ -1466,7 +1493,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/allinclusive-finder.jpg"
   },
   {
    "id": "lilianas-salud",
@@ -1638,7 +1666,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "forhandsvisning": "img/preview/medicinskt-snurrhjul.jpg"
   },
   {
    "id": "ada-zdrowa",

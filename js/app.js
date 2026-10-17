@@ -64,6 +64,7 @@
     return Math.round(m / 43200) + ' mån';
   }
   var ms = function (a) { return a.senast_aktiv ? new Date(a.senast_aktiv).getTime() || 0 : 0; };
+  var visaPv = load('hs_pv') !== '0';
   var pend = {};
   try { pend = JSON.parse(load('hs_prio_lokal') || '{}') || {}; } catch (e) { pend = {}; }
   function savePend() { store('hs_prio_lokal', JSON.stringify(pend)); }
@@ -155,7 +156,7 @@
     return c;
   }
   function kort(a, gammalt) {
-    var pbk, k = el('div', 'kort' + (gammalt ? ' gammal' : '') + (safeUrl(a.primar) ? '' : ' utan')), hu, tx, ch, i, lank = a.lankar || [];
+    var pbk, pv, im, k = el('div', 'kort' + (gammalt ? ' gammal' : '') + (safeUrl(a.primar) ? '' : ' utan')), hu, tx, ch, i, lank = a.lankar || [];
     k.style.position = 'relative';
     pbk = el('button', 'pb', getPrio(a) ? PIK[getPrio(a)] : '☆');
     pbk.type = 'button'; pbk.title = getPrio(a) ? 'Prio ' + getPrio(a) + ' ' + PN[getPrio(a)] + ' (tryck för att ändra)' : 'Sätt prio';
@@ -171,6 +172,21 @@
     hu.appendChild(tx);
     k.appendChild(hu);
     k.appendChild(pbk);
+    if (visaPv) {
+      pv = el(safeUrl(a.primar) ? 'a' : 'div', 'pv' + (a.forhandsvisning ? '' : ' ph'));
+      if (safeUrl(a.primar)) { pv.href = a.primar; pv.target = a.ny_flik ? '_blank' : '_self'; if (a.ny_flik) { pv.rel = 'noopener'; } pv.tabIndex = -1; }
+      if (a.forhandsvisning) {
+        im = document.createElement('img');
+        im.src = a.forhandsvisning; im.loading = 'lazy'; im.width = 160; im.height = 120;
+        im.alt = 'Förhandsvisning av ' + (a.namn || a.id);
+        pv.appendChild(im);
+      } else {
+        pv.style.background = 'linear-gradient(135deg,' + (FARG[a.kategori] || '#3a6ea5') + ',#1b202a)';
+        pv.appendChild(el('span', 'pi', a.ikon || '⭐'));
+        pv.setAttribute('aria-label', 'Ingen förhandsvisning av ' + (a.namn || a.id));
+      }
+      k.appendChild(pv);
+    }
     if (lank.length) {
       ch = el('div', 'chips');
       for (i = 0; i < lank.length; i++) { ch.appendChild(chip(lank[i], a.ny_flik)); }
@@ -358,6 +374,8 @@
     }
   }
   function setup() {
+    $('pvbtn').onclick = function () { visaPv = !visaPv; store('hs_pv', visaPv ? '1' : '0'); $('pvbtn').textContent = visaPv ? 'Dölj förhandsvisning' : 'Visa förhandsvisning'; renderHome(); return false; };
+    $('pvbtn').textContent = visaPv ? 'Dölj förhandsvisning' : 'Visa förhandsvisning';
     $('priobtn').onclick = function () { renderPrio(); show('prio'); return false; };
     $('pdonebtn').onclick = function () { renderHome(); show('home'); return false; };
     $('psok').oninput = function () { psok = this.value.trim().toLowerCase(); renderPrio(); };

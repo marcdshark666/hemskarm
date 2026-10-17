@@ -123,6 +123,11 @@ async function hantera(req, res) {
   if (v === '/api/prio') return hanteraPrio(req, res);
   if (req.method !== 'GET' && req.method !== 'HEAD') return skicka(res, 405, 'Metod ej tillåten', undefined, { Allow: 'GET, HEAD' });
   if (v === '/js/config.js') return skickaFil(req, res, Buffer.from(CONFIG_JS), 'text/javascript; charset=utf-8');
+  if (/^\/img\/preview\/[a-z0-9-]{1,80}\.jpg$/.test(v)) {
+    let bild;
+    try { bild = fs.readFileSync(path.join(ROT, v.slice(1))); } catch { return skicka(res, 404, 'Hittas inte'); }
+    return skickaFil(req, res, bild, 'image/jpeg');
+  }
   const nyckel = v === '/' ? '/index.html' : v;
   const typ = FILER[nyckel];
   if (!typ) return skicka(res, 404, 'Hittas inte');

@@ -68,11 +68,12 @@
   }
 
   function chip(l) {
-    var url = safeUrl(l.url), dod = l.status === 'ej uppe', cls, c, sub;
+    var url = safeUrl(l.url), dod = l.status === 'ej uppe' || l.status === 'borttaget', dim = l.status === 'privat' || l.status === 'servern ej igång' || l.status === 'gammal adress', cls, c, sub;
     if (l.typ === 'lokal') { cls = 'lok'; } else if (l.kraver_tailscale) { cls = 'ts'; } else { cls = 'pub'; }
+    if (dim) { cls = 'lok'; }
     if (dod) { cls = 'dod'; }
     if (!url) { cls = 'plan'; }
-    sub = l.typ === 'lokal' ? 'bara på datorn' : l.kraver_tailscale ? 'kräver Tailscale' : l.status === 'planerad' ? 'planerad' : dod ? 'ej uppe' : 'publik';
+    sub = l.typ === 'lokal' ? 'bara på datorn' : l.kraver_tailscale ? 'kräver Tailscale' : l.status === 'privat' ? 'kräver GitHub-inloggning' : l.status === 'servern ej igång' ? 'servern ej igång' : l.status === 'gammal adress' ? 'gammal adress' : l.status === 'borttaget' ? 'borttaget' : l.status === 'planerad' ? 'planerad' : dod ? 'ej uppe' : 'publik';
     c = el(url ? 'a' : 'span', 'chip ' + cls);
     c.appendChild(document.createTextNode((IKON[l.typ] || '🔗') + ' ' + (NAMN[l.typ] || l.etikett || 'Länk')));
     c.appendChild(el('small', null, sub));
@@ -86,7 +87,7 @@
     if (safeUrl(a.primar)) { hu.href = a.primar; hu.target = '_self'; }
     hu.appendChild(el('span', 'ic', a.ikon || '⭐'));
     tx = el('span', 'tx');
-    tx.appendChild(el('span', 'nm', a.namn || '?'));
+    tx.appendChild(el('span', 'nm', (Number(a.fast_rank) > 0 ? '📌 ' : '') + (a.namn || a.id || 'Namnlös')));
     if (a.beskrivning) { tx.appendChild(el('span', 'bs', a.beskrivning)); }
     tx.appendChild(el('span', 'tid', 'Senast aktiv för ' + tidSedan(a.senast_aktiv) + ' sedan'));
     hu.appendChild(tx);
@@ -122,12 +123,14 @@
     for (i = 0; i < kats.length; i++) { knapp(kats[i], kats[i]); }
   }
   function renderHome() {
-    var g = $('grid'), alla = effektiva(), vis, senaste, gr = Date.now() - 7 * 86400000, kats;
+    var g = $('grid'), alla = effektiva(), vis, senaste, fast, gr = Date.now() - 7 * 86400000, kats;
     g.innerHTML = '';
     $('rubrik').textContent = data.title || 'Hemskärm';
     renderFilter(alla);
     vis = alla.filter(matchar).sort(nyast);
     senaste = vis.filter(function (a) { return ms(a) >= gr; });
+    fast = vis.filter(function (a) { return Number(a.fast_rank) > 0; }).sort(function (x, y) { return Number(x.fast_rank) - Number(y.fast_rank); });
+    if (!filter && !sokord) { sektion(g, '📌 Fästa', fast, true); }
     if (!filter) { sektion(g, 'Senast använda (7 dagar)', senaste, true); }
     kats = (data.kategorier || []).slice();
     vis.forEach(function (a) { if (kats.indexOf(a.kategori) < 0) { kats.push(a.kategori); } });
@@ -151,13 +154,15 @@
     var box = $('editlist'), alla = effektiva(), kats = data.kategorier || [];
     box.innerHTML = '';
     alla.sort(nyast).forEach(function (a) {
-      var row = el('div', 'ed'), n, ik, u, sel, del;
+      var row = el('div', 'ed'), n, ik, u, sel, del, rk;
       n = el('input'); n.type = 'text'; n.className = 'f1'; n.value = a.namn || ''; n.placeholder = 'Namn';
       n.oninput = function () { sattFalt(a, 'namn', n.value); };
       ik = el('input'); ik.type = 'text'; ik.className = 'f2'; ik.value = a.ikon || ''; ik.placeholder = 'Ikon';
       ik.oninput = function () { sattFalt(a, 'ikon', ik.value); };
       u = el('input'); u.type = 'url'; u.className = 'f3'; u.value = a.primar || ''; u.placeholder = 'https://... (öppnas vid tryck)';
       u.oninput = function () { sattFalt(a, 'primar', u.value); };
+      rk = el('input'); rk.type = 'number'; rk.className = 'f5'; rk.min = '0'; rk.style.width = '84px'; rk.value = a.fast_rank || ''; rk.placeholder = 'Fäst #'; rk.title = 'Fästa: 1 = överst, tomt = ej fäst';
+      rk.oninput = function () { sattFalt(a, 'fast_rank', rk.value === '' ? 0 : Number(rk.value)); };
       sel = el('select'); sel.className = 'f4';
       kats.concat(kats.indexOf(a.kategori) < 0 ? [a.kategori] : []).forEach(function (k) {
         var o = el('option', null, k); o.value = k; if (k === a.kategori) { o.selected = true; } sel.appendChild(o);
@@ -168,7 +173,7 @@
         if (a._ny) { man.nya = man.nya.filter(function (x) { return x.id !== a.id; }); } else { man.dolda.push(a.id); }
         saveMan(); renderEdit(); return false;
       };
-      row.appendChild(n); row.appendChild(ik); row.appendChild(u); row.appendChild(sel); row.appendChild(del);
+      row.appendChild(n); row.appendChild(ik); row.appendChild(u); row.appendChild(rk); row.appendChild(sel); row.appendChild(del);
       box.appendChild(row);
     });
     if (man.dolda.length) { box.appendChild(el('p', 'msg', 'Dolda: ' + man.dolda.join(', '))); }

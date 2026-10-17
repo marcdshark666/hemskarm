@@ -42,7 +42,7 @@ const M = {
   'plaud-syncthing': { k: 0, i: '🔄', n: 'PLAUD Syncthing', b: 'Synk av PLAUD-filer.', dir: 'plaud-syncthing' },
   'sugar-buddy-bot': { k: 1, i: '🍬', n: 'Sugar Buddy', b: 'Diabetesstöd, centralen.', v: [V('sugar-buddy-bot')] },
   'dexcom-reklamations-assistent': { k: 1, i: '📟', n: 'Dexcom-reklamation', b: 'Hjälp med sensorreklamationer.', v: [V('dexcom-reklamations-assistent')] },
-  'marcs-halsoai': { k: 1, i: '❤️', n: 'Marcs HälsoAI', b: 'Marcs hälsosida.', ts: 'halsa-marc', v: [V('marcs-halsoai')], pg: [PAGES + 'marcs-halsoai/'] },
+  'marcs-halsoai': { k: 1, i: '❤️', n: 'Marcs HälsoAI', b: 'Marcs hälsosida.', ts: 'halsa-marc', v: [V('marcs-halsoai')], },
   'bertils-halsoai': { k: 1, i: '👴', n: 'Bertils HälsoAI', b: 'Hälsosida för Bertil.', v: [V('bertils-halsoai')] },
   'lilianas-salud': { k: 1, i: '🌿', n: 'Lilianas Salud', b: 'Hälsosida för Liliana.', v: [V('lilianas-salud')], b44: ['https://lilianas-salud.base44.app/'] },
   'gym-3d-streaks': { k: 1, i: '🏋️', n: 'Gym 3D Streaks', b: 'Gympass och streaks i 3D.' },
@@ -73,6 +73,7 @@ const M = {
   'the-work-list': { k: 6, i: '📝', n: 'The Work List', b: 'Projektlistan, uppdrag och rutiner.', ts: 'worklist', v: [V('the-work-list')] },
   'tailscale-hemsidor': { k: 6, i: '🔒', n: 'Tailscale-sidor', b: 'Register över alla privata sidor.', ts: 'sidor' },
   'hemskarm': { k: 6, i: '🏡', n: 'Hemskärm', b: 'Den här sidan.', ts: 'hemskarm', dir: 'hemskarm' },
+  'boss': { k: 6, i: '👑', n: 'BOSS BOT / vakthundar', b: 'Chefen och vakthundarna: status och uppdrag i Botlabbet.', ts: 'bots', dir: 'worklist-bots', },
   'botlabbet': { k: 6, i: '🤖', n: 'Botlabbet', b: 'Work List-bottar och deras namn.', ts: 'bots', v: [V('botlabbet')] },
   'uppdateringsvakt': { k: 6, i: '🛡️', n: 'Uppdateringsvakt', b: 'Vakt för uppdateringar.' },
   'server-uppdaterare': { k: 6, i: '♻️', n: 'Server-uppdaterare', b: 'Startar om app-servrar efter kodändring.', dir: 'server-uppdaterare' },
@@ -103,7 +104,7 @@ const M = {
   'cv-claude-dar': { k: 8, i: '✍️', n: 'Meritbrev & CV', b: 'CV och meritbrev med Claude.', v: [V('cv-claude-dar')] },
 };
 // Vercel-projekt utan Work List-kort: lägg bara med om mappen finns eller listan säger det.
-const EXTRA_IDS = ['bt-start', 'vanner', 'forelasningar', 'hemskarm', 'filer-privat', 'server-uppdaterare', 'squat-counter', 'hemmaracet', 'bambu-elegoo-profiler', 'plaud-syncthing', 'resolve-claude-mcp', 'kliniskt', 'vanskapsapp', 'medicinskt-snurrhjul', 'ada-zdrowa', 'bertils-halsoai', 'lilianas-salud', 'gym-3d-streaks'];
+const EXTRA_IDS = ['boss', 'bt-start', 'vanner', 'forelasningar', 'hemskarm', 'filer-privat', 'server-uppdaterare', 'squat-counter', 'hemmaracet', 'bambu-elegoo-profiler', 'plaud-syncthing', 'resolve-claude-mcp', 'kliniskt', 'vanskapsapp', 'medicinskt-snurrhjul', 'ada-zdrowa', 'bertils-halsoai', 'lilianas-salud', 'gym-3d-streaks'];
 
 const lasJson = (f, fb) => { try { return JSON.parse(fs.readFileSync(f, 'utf8').replace(/^﻿/, '')); } catch { return fb; } };
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -196,7 +197,7 @@ for (const id of ids) {
   if (!primar) { const x = lank.find((l) => l.url && l.typ !== 'lokal'); primar = x ? x.url : ''; }
   lista.push({
     id: slug(id), namn: m.n, ikon: m.i, kategori: KAT[m.k], senast_aktiv: senast, beskrivning: m.b,
-    primar, lankar: lank, ...(skydd ? { skyddad: true } : {}),
+    primar, lankar: lank, ...(m.fr ? { fast_rank: m.fr } : {}), ...(skydd ? { skyddad: true } : {}),
   });
 }
 // Tailscale-sidor som ingen app pekar på ännu.
@@ -206,6 +207,67 @@ for (const s of sidor.sidor || []) {
   const url = s.route.startsWith(':') ? `${host}${s.route}` : `${host}${s.route === '/' ? '/' : s.route + '/'}`;
   const st = (await lyssnar(s.port)) ? 'uppe' : 'ej uppe';
   lista.push({ id: slug('ts-' + s.id), namn: s.namn, ikon: '🔒', kategori: 'Övrigt', senast_aktiv: fs.existsSync(d) ? nyastMtime(d) : null, beskrivning: s.beskrivning || '', primar: url, lankar: [{ typ: 'tailscale', etikett: 'Tailscale ' + s.route, url, status: st, kraver_tailscale: true }] });
+}
+
+
+// Berikningsfiler (data/berikning.*.json) från hjälpagenter: slås ihop när de finns, tolerant mot format.
+const BER = (n) => lasJson(path.join(HEM, 'data', 'berikning.' + n + '.json'), null);
+const arObj = (x) => x && typeof x === 'object' && !Array.isArray(x);
+(function berika() {
+  const idOf = (k) => slug(String(k));
+  const byId = new Map(lista.map((a) => [a.id, a]));
+  const besk = BER('beskrivningar');
+  if (arObj(besk)) {
+    const src = arObj(besk.beskrivningar) ? besk.beskrivningar : arObj(besk.apps) ? besk.apps : besk;
+    for (const [k, v] of Object.entries(src)) {
+      const a = byId.get(idOf(k)); if (!a) continue;
+      if (typeof v === 'string') a.beskrivning = v;
+      else if (arObj(v)) { if (v.beskrivning) a.beskrivning = String(v.beskrivning); if (v.ikon) a.ikon = String(v.ikon); }
+    }
+  } else if (Array.isArray(besk)) for (const v of besk) { const a = v && byId.get(idOf(v.id)); if (a) { if (v.beskrivning) a.beskrivning = v.beskrivning; if (v.ikon) a.ikon = v.ikon; } }
+  const kat = BER('kategorier');
+  if (arObj(kat)) {
+    const map = [kat.poster, kat.id_kategori, kat.id_till_kategori, kat.apps, kat.map, kat.kategori_per_id].find(arObj) || kat;
+    if (Array.isArray(kat.kategorier)) { KAT.length = 0; for (const k of kat.kategorier) KAT.push(typeof k === 'string' ? k : k.namn); }
+    for (const [k, v] of Object.entries(map)) { const a = byId.get(idOf(k)); if (a && typeof v === 'string') a.kategori = v; }
+  }
+  const ls = BER('lankstatus');
+  if (ls) {
+    const st = new Map();
+    (function gå(x, nyckel) {
+      if (typeof x === 'string' && /^https?:/.test(nyckel || '')) st.set(nyckel, x);
+      else if (Array.isArray(x)) x.forEach((y) => gå(y));
+      else if (arObj(x)) { if (x.url && x.status) st.set(x.url, String(x.status)); else if (x.status && /^https?:/.test(nyckel || '')) st.set(nyckel, String(x.status)); else for (const [k, v] of Object.entries(x)) gå(v, k); }
+    })(ls);
+    for (const a of lista) { if (a.skyddad) continue; for (const l of a.lankar) if (st.has(l.url)) { const v = st.get(l.url); l.status = /^(uppe|ej uppe|planerad|ej kollad|okänd)$/.test(v) ? v : /login|skydd|auth/i.test(v) ? 'uppe' : v; } }
+  }
+  const se = BER('senast');
+  if (arObj(se)) for (const [k, v] of Object.entries(arObj(se.senast) ? se.senast : se)) {
+    const a = byId.get(idOf(k)); const t = typeof v === 'string' ? v : arObj(v) ? v.senast_aktiv : null;
+    if (a && t && !isNaN(Date.parse(t))) a.senast_aktiv = new Date(t).toISOString();
+  }
+})();
+
+// Statusfinish: privata GitHub-repon (gh, ingen token i output), serverstatus, gamla adresser.
+const ghCache = new Map();
+function ghPrivat(url) {
+  const m = /^https:\/\/github\.com\/([^/]+)\/([^/]+)$/.exec(url);
+  if (!m) return null;
+  if (ghCache.has(url)) return ghCache.get(url);
+  let r = null;
+  try { r = execFileSync('gh', ['api', `repos/${m[1]}/${m[2]}`, '--jq', '.private'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 20000 }).trim() === 'true' ? 'privat' : 'uppe'; }
+  catch (e) { r = /404|Not Found/i.test(String(e.stderr || '')) ? 'borttaget' : null; }
+  ghCache.set(url, r);
+  return r;
+}
+for (const a of lista) {
+  if (a.skyddad) continue;
+  const tsUppe = a.lankar.some((l) => l.typ === 'tailscale' && l.status === 'uppe');
+  for (const l of a.lankar) {
+    if (l.typ === 'github' && /github\.com\/[^/]+\/[^/]+$/.test(l.url) && PROBE) { const g = ghPrivat(l.url); if (g) l.status = g; }
+    else if ((l.typ === 'tailscale' || l.typ === 'lokal') && l.status === 'ej uppe') l.status = 'servern ej igång';
+    else if (l.typ === 'vercel' && l.status === 'ej uppe' && a.id === 'the-work-list' && tsUppe) l.status = 'gammal adress';
+  }
 }
 
 // Manuell sammanslagning (manuellt vinner).
@@ -227,5 +289,5 @@ const kategorier = [...KAT.filter((k) => ut.some((a) => a.kategori === k)), ...[
 const doc = { title: 'Hemskärm', rev: (Number(gammal.rev) || 0) + 1, genererad: new Date().toISOString(), kategorier, apps: ut };
 fs.writeFileSync(path.join(HEM, 'apps.json'), JSON.stringify(doc, null, 1) + '\n', 'utf8');
 const lk = ut.flatMap((a) => a.lankar);
-console.log(`apps.json rev ${doc.rev}: ${ut.length} appar, ${kategorier.length} kategorier, ${lk.length} länkar (ej uppe: ${lk.filter((l) => l.status === 'ej uppe').length})`);
+console.log(`apps.json rev ${doc.rev}: ${ut.length} appar, ${kategorier.length} kategorier, ${lk.length} länkar (ej uppe/borttaget: ${lk.filter((l) => l.status === 'ej uppe' || l.status === 'borttaget').length}, privata: ${lk.filter((l) => l.status === 'privat').length}, server ej igång: ${lk.filter((l) => l.status === 'servern ej igång').length})`);
 for (const k of kategorier) console.log(' ', k, ut.filter((a) => a.kategori === k).length);

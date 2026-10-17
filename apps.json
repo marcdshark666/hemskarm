@@ -1,7 +1,7 @@
 {
  "title": "Hemskärm",
- "rev": 3,
- "genererad": "2026-10-17T16:33:03.395Z",
+ "rev": 7,
+ "genererad": "2026-10-17T16:38:03.982Z",
  "kategorier": [
   "Medicin & utbildning",
   "Diabetes & hälsa",
@@ -20,8 +20,8 @@
    "namn": "Hemskärm",
    "ikon": "🏡",
    "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-10-17T16:32:52.820Z",
-   "beskrivning": "Den här sidan.",
+   "senast_aktiv": "2026-10-17T16:36:29.733Z",
+   "beskrivning": "Startsida som samlar alla appar och sidor på ett ställe.",
    "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/hemskarm/",
    "lankar": [
     {
@@ -46,41 +46,16 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
-  },
-  {
-   "id": "filer-privat",
-   "namn": "Filer (3D-print, privat)",
-   "ikon": "🗃️",
-   "kategori": "3D-print & hobby",
-   "senast_aktiv": "2026-10-17T16:23:09.100Z",
-   "beskrivning": "Printade objekt med originalfiler.",
-   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/filer/",
-   "lankar": [
-    {
-     "typ": "tailscale",
-     "etikett": "Tailscale /filer",
-     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/filer/",
-     "status": "uppe",
-     "kraver_tailscale": true
-    },
-    {
-     "typ": "lokal",
-     "etikett": "127.0.0.1:5203 (bara på datorn)",
-     "url": "http://127.0.0.1:5203/",
-     "status": "uppe",
-     "kraver_tailscale": false,
-     "bara_dator": true
-    }
-   ]
+   ],
+   "fast_rank": 5
   },
   {
    "id": "the-work-list",
    "namn": "The Work List",
    "ikon": "📝",
    "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-10-17T16:17:00.134Z",
-   "beskrivning": "Projektlistan, uppdrag och rutiner.",
+   "senast_aktiv": "2026-10-17T16:36:25.326Z",
+   "beskrivning": "Projektlista med uppdrag och rutiner som körs av AI-agenter.",
    "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/worklist/",
    "lankar": [
     {
@@ -102,143 +77,66 @@
      "typ": "vercel",
      "etikett": "Vercel the-work-list.vercel.app",
      "url": "https://the-work-list.vercel.app/",
-     "status": "ej uppe",
+     "status": "gammal adress",
      "kraver_tailscale": false
     },
     {
      "typ": "github",
      "etikett": "GitHub repo",
      "url": "https://github.com/marcdshark666/the-work-list",
-     "status": "ej uppe",
+     "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "fast_rank": 3
   },
   {
-   "id": "aaron-prints",
-   "namn": "Aaron Prints / DrJonsson",
-   "ikon": "🖨️",
-   "kategori": "3D-print & hobby",
-   "senast_aktiv": "2026-10-17T16:00:05.571Z",
-   "beskrivning": "Print-motiv och butik.",
-   "primar": "https://marcdshark666.github.io/drjonsson/",
-   "lankar": [
-    {
-     "typ": "github",
-     "etikett": "GitHub Pages",
-     "url": "https://marcdshark666.github.io/drjonsson/",
-     "status": "uppe",
-     "kraver_tailscale": false
-    },
-    {
-     "typ": "github",
-     "etikett": "GitHub repo",
-     "url": "https://github.com/marcdshark666/drjonsson",
-     "status": "uppe",
-     "kraver_tailscale": false
-    }
-   ]
-  },
-  {
-   "id": "radcore",
-   "namn": "RADCORE",
-   "ikon": "🩻",
-   "kategori": "Medicin & utbildning",
-   "senast_aktiv": "2026-10-17T14:18:10.597Z",
-   "beskrivning": "Radiologi, bokbank och kompendium.",
-   "primar": "https://radcore.vercel.app/",
-   "lankar": [
-    {
-     "typ": "vercel",
-     "etikett": "Vercel radcore.vercel.app",
-     "url": "https://radcore.vercel.app/",
-     "status": "uppe",
-     "kraver_tailscale": false
-    }
-   ]
-  },
-  {
-   "id": "bt-start",
-   "namn": "BT-start",
-   "ikon": "📋",
-   "kategori": "Medicin & utbildning",
-   "senast_aktiv": "2026-10-17T10:30:39.761Z",
-   "beskrivning": "BT-schema, dokument och startsida.",
-   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/bt/",
+   "id": "marcs-halsoai",
+   "namn": "Marcs HälsoAI",
+   "ikon": "❤️",
+   "kategori": "Diabetes & hälsa",
+   "senast_aktiv": "2026-10-17T16:35:58.027Z",
+   "beskrivning": "Personlig hälsosida med diabetes och symptomlogg.",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/halsa-marc/",
    "lankar": [
     {
      "typ": "tailscale",
-     "etikett": "Tailscale /bt",
-     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/bt/",
+     "etikett": "Tailscale /halsa-marc",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/halsa-marc/",
      "status": "uppe",
      "kraver_tailscale": true
     },
     {
      "typ": "lokal",
-     "etikett": "127.0.0.1:5195 (bara på datorn)",
-     "url": "http://127.0.0.1:5195/",
-     "status": "uppe",
-     "kraver_tailscale": false,
-     "bara_dator": true
-    }
-   ]
-  },
-  {
-   "id": "medhop",
-   "namn": "MedHop",
-   "ikon": "🩺",
-   "kategori": "Medicin & utbildning",
-   "senast_aktiv": "2026-10-17T09:32:10.114Z",
-   "beskrivning": "Medicinsk kunskap och OSCE-vinjetter. Privat version har extra kapitel.",
-   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/medhop/",
-   "lankar": [
-    {
-     "typ": "tailscale",
-     "etikett": "Tailscale /medhop",
-     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/medhop/",
-     "status": "uppe",
-     "kraver_tailscale": true
-    },
-    {
-     "typ": "lokal",
-     "etikett": "127.0.0.1:5212 (bara på datorn)",
-     "url": "http://127.0.0.1:5212/",
+     "etikett": "127.0.0.1:5192 (bara på datorn)",
+     "url": "http://127.0.0.1:5192/",
      "status": "uppe",
      "kraver_tailscale": false,
      "bara_dator": true
     },
     {
      "typ": "vercel",
-     "etikett": "Vercel medhop.vercel.app",
-     "url": "https://medhop.vercel.app/",
+     "etikett": "Vercel marcs-halsoai.vercel.app",
+     "url": "https://marcs-halsoai.vercel.app/",
      "status": "uppe",
      "kraver_tailscale": false
     },
     {
      "typ": "github",
      "etikett": "GitHub repo",
-     "url": "https://github.com/marcdshark666/medhop",
-     "status": "ej uppe",
+     "url": "https://github.com/marcdshark666/marcs-halsoai",
+     "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
-  },
-  {
-   "id": "bambu-elegoo-profiler",
-   "namn": "Bambu/Elegoo-profiler",
-   "ikon": "🛠️",
-   "kategori": "3D-print & hobby",
-   "senast_aktiv": "2026-10-17T09:08:12.066Z",
-   "beskrivning": "Skrivarprofiler.",
-   "primar": "",
-   "lankar": []
+   ],
+   "fast_rank": 6
   },
   {
    "id": "print-planer",
    "namn": "Print-planer",
    "ikon": "🧱",
    "kategori": "3D-print & hobby",
-   "senast_aktiv": "2026-10-17T08:05:11.992Z",
+   "senast_aktiv": "2026-10-17T16:31:51.677Z",
    "beskrivning": "3D-skrivarstyrning och print-planer.",
    "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/skrivare/",
    "lankar": [
@@ -274,12 +172,241 @@
    ]
   },
   {
+   "id": "aaron-prints",
+   "namn": "Aaron Prints / DrJonsson",
+   "ikon": "🖨️",
+   "kategori": "3D-print & hobby",
+   "senast_aktiv": "2026-10-17T16:25:34.000Z",
+   "beskrivning": "Print-motiv och butik för 3D-printade objekt.",
+   "primar": "https://marcdshark666.github.io/drjonsson/",
+   "lankar": [
+    {
+     "typ": "github",
+     "etikett": "GitHub Pages",
+     "url": "https://marcdshark666.github.io/drjonsson/",
+     "status": "uppe",
+     "kraver_tailscale": false
+    },
+    {
+     "typ": "github",
+     "etikett": "GitHub repo",
+     "url": "https://github.com/marcdshark666/drjonsson",
+     "status": "uppe",
+     "kraver_tailscale": false
+    }
+   ],
+   "fast_rank": 8
+  },
+  {
+   "id": "tailscale-hemsidor",
+   "namn": "Tailscale-sidor",
+   "ikon": "🔒",
+   "kategori": "Verktyg & AI",
+   "senast_aktiv": "2026-10-17T16:23:34.704Z",
+   "beskrivning": "Register över alla privata Tailscale-sidor.",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/sidor/",
+   "lankar": [
+    {
+     "typ": "tailscale",
+     "etikett": "Tailscale /sidor",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/sidor/",
+     "status": "uppe",
+     "kraver_tailscale": true
+    },
+    {
+     "typ": "lokal",
+     "etikett": "127.0.0.1:5200 (bara på datorn)",
+     "url": "http://127.0.0.1:5200/",
+     "status": "uppe",
+     "kraver_tailscale": false,
+     "bara_dator": true
+    }
+   ],
+   "fast_rank": 5
+  },
+  {
+   "id": "filer-privat",
+   "namn": "Filer (3D-print, privat)",
+   "ikon": "🗃️",
+   "kategori": "3D-print & hobby",
+   "senast_aktiv": "2026-10-17T16:23:09.100Z",
+   "beskrivning": "Privat arkiv över printade objekt med originalfiler.",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/filer/",
+   "lankar": [
+    {
+     "typ": "tailscale",
+     "etikett": "Tailscale /filer",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/filer/",
+     "status": "uppe",
+     "kraver_tailscale": true
+    },
+    {
+     "typ": "lokal",
+     "etikett": "127.0.0.1:5203 (bara på datorn)",
+     "url": "http://127.0.0.1:5203/",
+     "status": "uppe",
+     "kraver_tailscale": false,
+     "bara_dator": true
+    }
+   ],
+   "fast_rank": 8
+  },
+  {
+   "id": "radcore",
+   "namn": "RADCORE",
+   "ikon": "🩻",
+   "kategori": "Medicin & utbildning",
+   "senast_aktiv": "2026-10-17T16:18:27.047Z",
+   "beskrivning": "Radiologi med bokbank och kompendium.",
+   "primar": "https://radcore.vercel.app/",
+   "lankar": [
+    {
+     "typ": "vercel",
+     "etikett": "Vercel radcore.vercel.app",
+     "url": "https://radcore.vercel.app/",
+     "status": "uppe",
+     "kraver_tailscale": false
+    }
+   ]
+  },
+  {
+   "id": "bt-start",
+   "namn": "BT-läkare (BT-start)",
+   "ikon": "📋",
+   "kategori": "Medicin & utbildning",
+   "senast_aktiv": "2026-10-17T16:05:37.595Z",
+   "beskrivning": "Startsida för BT-schema och dokument.",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/bt/",
+   "lankar": [
+    {
+     "typ": "tailscale",
+     "etikett": "Tailscale /bt",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/bt/",
+     "status": "uppe",
+     "kraver_tailscale": true
+    },
+    {
+     "typ": "lokal",
+     "etikett": "127.0.0.1:5195 (bara på datorn)",
+     "url": "http://127.0.0.1:5195/",
+     "status": "uppe",
+     "kraver_tailscale": false,
+     "bara_dator": true
+    }
+   ],
+   "fast_rank": 4
+  },
+  {
+   "id": "medhop",
+   "namn": "MedHop",
+   "ikon": "🩺",
+   "kategori": "Medicin & utbildning",
+   "senast_aktiv": "2026-10-17T09:32:46.000Z",
+   "beskrivning": "Medicinsk kunskap och OSCE-vinjetter.",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/medhop/",
+   "lankar": [
+    {
+     "typ": "tailscale",
+     "etikett": "Tailscale /medhop",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/medhop/",
+     "status": "uppe",
+     "kraver_tailscale": true
+    },
+    {
+     "typ": "lokal",
+     "etikett": "127.0.0.1:5212 (bara på datorn)",
+     "url": "http://127.0.0.1:5212/",
+     "status": "uppe",
+     "kraver_tailscale": false,
+     "bara_dator": true
+    },
+    {
+     "typ": "vercel",
+     "etikett": "Vercel medhop.vercel.app",
+     "url": "https://medhop.vercel.app/",
+     "status": "uppe",
+     "kraver_tailscale": false
+    },
+    {
+     "typ": "github",
+     "etikett": "GitHub repo",
+     "url": "https://github.com/marcdshark666/medhop",
+     "status": "privat",
+     "kraver_tailscale": false
+    }
+   ]
+  },
+  {
+   "id": "cynergi-med-flow",
+   "namn": "Cynergi Med Flow",
+   "ikon": "💊",
+   "kategori": "Medicin & utbildning",
+   "senast_aktiv": "2026-10-17T09:21:49.000Z",
+   "beskrivning": "Medicinskt flödesverktyg, privat instans.",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net:8443/",
+   "lankar": [
+    {
+     "typ": "tailscale",
+     "etikett": "Tailscale :8443/",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net:8443/",
+     "status": "uppe",
+     "kraver_tailscale": true
+    },
+    {
+     "typ": "lokal",
+     "etikett": "127.0.0.1:5201 (bara på datorn)",
+     "url": "http://127.0.0.1:5201/",
+     "status": "uppe",
+     "kraver_tailscale": false,
+     "bara_dator": true
+    },
+    {
+     "typ": "vercel",
+     "etikett": "Vercel cynergi-med-flow.vercel.app",
+     "url": "https://cynergi-med-flow.vercel.app/",
+     "status": "uppe",
+     "kraver_tailscale": false
+    },
+    {
+     "typ": "base44",
+     "etikett": "Base44 cynergi-med-flow.base44.app",
+     "url": "https://cynergi-med-flow.base44.app/",
+     "status": "uppe",
+     "kraver_tailscale": false
+    },
+    {
+     "typ": "github",
+     "etikett": "GitHub repo",
+     "url": "https://github.com/marcdshark666/cynergi-med-flow",
+     "status": "privat",
+     "kraver_tailscale": false
+    },
+    {
+     "kraver_tailscale": false,
+     "typ": "supabase",
+     "etikett": "Supabase (planerad, väntar på nycklar)",
+     "url": "",
+     "status": "planerad"
+    }
+   ]
+  },
+  {
+   "id": "bambu-elegoo-profiler",
+   "namn": "Bambu/Elegoo-profiler",
+   "ikon": "🛠️",
+   "kategori": "3D-print & hobby",
+   "senast_aktiv": "2026-10-17T09:18:38.410Z",
+   "beskrivning": "Profiler för Bambu- och Elegoo-skrivare.",
+   "primar": "",
+   "lankar": []
+  },
+  {
    "id": "vanner",
    "namn": "Vänkrets",
    "ikon": "👥",
    "kategori": "Kommunikation & vänner",
-   "senast_aktiv": "2026-10-17T07:43:42.031Z",
-   "beskrivning": "Vänlistor, prioritet och utkast.",
+   "senast_aktiv": "2026-10-17T08:07:25.129Z",
+   "beskrivning": "Vänlistor med prioritet och utkast till meddelanden.",
    "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/vanner/",
    "lankar": [
     {
@@ -298,6 +425,16 @@
      "bara_dator": true
     }
    ]
+  },
+  {
+   "id": "uppdateringsvakt",
+   "namn": "Uppdateringsvakt",
+   "ikon": "🛡️",
+   "kategori": "Verktyg & AI",
+   "senast_aktiv": "2026-10-17T08:00:46.881Z",
+   "beskrivning": "Vakt som bevakar uppdateringar.",
+   "primar": "",
+   "lankar": []
   },
   {
    "id": "husvakten",
@@ -337,7 +474,8 @@
      "status": "uppe",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "fast_rank": 7
   },
   {
    "id": "manadsavrakning",
@@ -345,7 +483,7 @@
    "ikon": "💶",
    "kategori": "Ekonomi & affär",
    "senast_aktiv": "2026-10-17T07:00:38.305Z",
-   "beskrivning": "Marc & Adas månadsavräkning.",
+   "beskrivning": "Månadsavräkning mellan Marc och Ada.",
    "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/",
    "lankar": [
     {
@@ -366,38 +504,12 @@
    ]
   },
   {
-   "id": "tailscale-hemsidor",
-   "namn": "Tailscale-sidor",
-   "ikon": "🔒",
-   "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-10-17T06:51:18.224Z",
-   "beskrivning": "Register över alla privata sidor.",
-   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/sidor/",
-   "lankar": [
-    {
-     "typ": "tailscale",
-     "etikett": "Tailscale /sidor",
-     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/sidor/",
-     "status": "uppe",
-     "kraver_tailscale": true
-    },
-    {
-     "typ": "lokal",
-     "etikett": "127.0.0.1:5200 (bara på datorn)",
-     "url": "http://127.0.0.1:5200/",
-     "status": "uppe",
-     "kraver_tailscale": false,
-     "bara_dator": true
-    }
-   ]
-  },
-  {
    "id": "quiz-runner",
    "namn": "Quiz Rush",
    "ikon": "🎮",
    "kategori": "Spel & quiz",
    "senast_aktiv": "2026-10-17T06:43:46.601Z",
-   "beskrivning": "Quizspel.",
+   "beskrivning": "Quizspel med frågor och poäng.",
    "primar": "https://quiz-rush-game.vercel.app/",
    "lankar": [
     {
@@ -417,58 +529,21 @@
    ]
   },
   {
-   "id": "marcs-halsoai",
-   "namn": "Marcs HälsoAI",
-   "ikon": "❤️",
-   "kategori": "Diabetes & hälsa",
-   "senast_aktiv": "2026-10-17T05:00:54.190Z",
-   "beskrivning": "Marcs hälsosida.",
-   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/halsa-marc/",
-   "lankar": [
-    {
-     "typ": "tailscale",
-     "etikett": "Tailscale /halsa-marc",
-     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/halsa-marc/",
-     "status": "uppe",
-     "kraver_tailscale": true
-    },
-    {
-     "typ": "lokal",
-     "etikett": "127.0.0.1:5192 (bara på datorn)",
-     "url": "http://127.0.0.1:5192/",
-     "status": "uppe",
-     "kraver_tailscale": false,
-     "bara_dator": true
-    },
-    {
-     "typ": "vercel",
-     "etikett": "Vercel marcs-halsoai.vercel.app",
-     "url": "https://marcs-halsoai.vercel.app/",
-     "status": "uppe",
-     "kraver_tailscale": false
-    },
-    {
-     "typ": "github",
-     "etikett": "GitHub Pages",
-     "url": "https://marcdshark666.github.io/marcs-halsoai/",
-     "status": "ej uppe",
-     "kraver_tailscale": false
-    },
-    {
-     "typ": "github",
-     "etikett": "GitHub repo",
-     "url": "https://github.com/marcdshark666/marcs-halsoai",
-     "status": "uppe",
-     "kraver_tailscale": false
-    }
-   ]
+   "id": "restaurang-roulette",
+   "namn": "Restaurang Roulette",
+   "ikon": "🍽️",
+   "kategori": "Hem & vardag",
+   "senast_aktiv": "2026-10-17T03:20:01.431Z",
+   "beskrivning": "Slumpar fram en restaurang att äta på.",
+   "primar": "",
+   "lankar": []
   },
   {
    "id": "server-uppdaterare",
    "namn": "Server-uppdaterare",
    "ikon": "♻️",
    "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-10-16T21:07:20.603Z",
+   "senast_aktiv": "2026-10-16T21:07:21.449Z",
    "beskrivning": "Startar om app-servrar efter kodändring.",
    "primar": "",
    "lankar": []
@@ -479,9 +554,36 @@
    "ikon": "🦾",
    "kategori": "Verktyg & AI",
    "senast_aktiv": "2026-10-16T20:10:24.307Z",
-   "beskrivning": "Lokal AI-hjärna (Qwen).",
+   "beskrivning": "Lokal AI-hjärna som körs på egna datorn (Qwen).",
    "primar": "",
    "lankar": []
+  },
+  {
+   "id": "boss",
+   "namn": "BOSS BOT / vakthundar",
+   "ikon": "👑",
+   "kategori": "Verktyg & AI",
+   "senast_aktiv": "2026-10-16T19:48:21.315Z",
+   "beskrivning": "Chefen och vakthundarna: status och uppdrag i Botlabbet.",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/bots/",
+   "lankar": [
+    {
+     "typ": "tailscale",
+     "etikett": "Tailscale /bots",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/bots/",
+     "status": "uppe",
+     "kraver_tailscale": true
+    },
+    {
+     "typ": "lokal",
+     "etikett": "127.0.0.1:5198 (bara på datorn)",
+     "url": "http://127.0.0.1:5198/",
+     "status": "uppe",
+     "kraver_tailscale": false,
+     "bara_dator": true
+    }
+   ],
+   "fast_rank": 1
   },
   {
    "id": "skarmstyrning",
@@ -489,73 +591,35 @@
    "ikon": "🖥️",
    "kategori": "Verktyg & AI",
    "senast_aktiv": "2026-10-15T17:40:31.988Z",
-   "beskrivning": "Styr datorn med Python (skarm_plus).",
+   "beskrivning": "Styr datorn med Python-verktyget skarm_plus.",
    "primar": "",
    "lankar": []
   },
   {
-   "id": "cynergi-med-flow",
-   "namn": "Cynergi Med Flow",
-   "ikon": "💊",
-   "kategori": "Medicin & utbildning",
-   "senast_aktiv": "2026-10-15T11:50:08.272Z",
-   "beskrivning": "Medicinskt flödesverktyg. Privat instans på :8443, Base44 som äldre kopia.",
-   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net:8443/",
+   "id": "spelkontroll",
+   "namn": "Spelkontroll",
+   "ikon": "🕹️",
+   "kategori": "Spel & quiz",
+   "senast_aktiv": "2026-10-14T20:00:40.805Z",
+   "beskrivning": "Styr spel och skärm från mobilen.",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/spel/",
    "lankar": [
     {
      "typ": "tailscale",
-     "etikett": "Tailscale :8443/",
-     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net:8443/",
+     "etikett": "Tailscale /spel",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/spel/",
      "status": "uppe",
      "kraver_tailscale": true
     },
     {
      "typ": "lokal",
-     "etikett": "127.0.0.1:5201 (bara på datorn)",
-     "url": "http://127.0.0.1:5201/",
+     "etikett": "127.0.0.1:5191 (bara på datorn)",
+     "url": "http://127.0.0.1:5191/",
      "status": "uppe",
      "kraver_tailscale": false,
      "bara_dator": true
-    },
-    {
-     "typ": "vercel",
-     "etikett": "Vercel cynergi-med-flow.vercel.app",
-     "url": "https://cynergi-med-flow.vercel.app/",
-     "status": "uppe",
-     "kraver_tailscale": false
-    },
-    {
-     "typ": "base44",
-     "etikett": "Base44 cynergi-med-flow.base44.app",
-     "url": "https://cynergi-med-flow.base44.app/",
-     "status": "uppe",
-     "kraver_tailscale": false
-    },
-    {
-     "typ": "github",
-     "etikett": "GitHub repo",
-     "url": "https://github.com/marcdshark666/cynergi-med-flow",
-     "status": "ej uppe",
-     "kraver_tailscale": false
-    },
-    {
-     "kraver_tailscale": false,
-     "typ": "supabase",
-     "etikett": "Supabase (planerad, väntar på nycklar)",
-     "url": "",
-     "status": "planerad"
     }
    ]
-  },
-  {
-   "id": "uppdateringsvakt",
-   "namn": "Uppdateringsvakt",
-   "ikon": "🛡️",
-   "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-10-14T08:04:43.322Z",
-   "beskrivning": "Vakt för uppdateringar.",
-   "primar": "",
-   "lankar": []
   },
   {
    "id": "gadget-drop",
@@ -563,7 +627,7 @@
    "ikon": "📦",
    "kategori": "Ekonomi & affär",
    "senast_aktiv": "2026-10-14T06:59:03.423Z",
-   "beskrivning": "Affiliate-kanal. Stoppnivå: inga automatiska åtgärder härifrån.",
+   "beskrivning": "Affiliate-kanal för prylklipp; stoppnivå, inga automatiska åtgärder.",
    "primar": "https://gadget-drop-one.vercel.app/",
    "lankar": [
     {
@@ -621,7 +685,7 @@
    "ikon": "🗓️",
    "kategori": "Hem & vardag",
    "senast_aktiv": "2026-10-13T05:50:06.100Z",
-   "beskrivning": "Kalenderbräde.",
+   "beskrivning": "Kalenderbräde för planering.",
    "primar": "https://kalender-bradet.vercel.app/",
    "lankar": [
     {
@@ -641,12 +705,12 @@
    ]
   },
   {
-   "id": "restaurang-roulette",
-   "namn": "Restaurang Roulette",
-   "ikon": "🍽️",
-   "kategori": "Hem & vardag",
-   "senast_aktiv": "2026-10-12T06:20:39.186Z",
-   "beskrivning": "Slumpa restaurang.",
+   "id": "skrivbordet",
+   "namn": "Skrivbordet",
+   "ikon": "🪟",
+   "kategori": "Verktyg & AI",
+   "senast_aktiv": "2026-10-12T07:39:04.608Z",
+   "beskrivning": "Se datorns skärm live från mobilen.",
    "primar": "",
    "lankar": []
   },
@@ -656,7 +720,7 @@
    "ikon": "📟",
    "kategori": "Diabetes & hälsa",
    "senast_aktiv": "2026-10-10T07:59:33.205Z",
-   "beskrivning": "Hjälp med sensorreklamationer.",
+   "beskrivning": "Hjälper till med reklamation av Dexcom-sensorer.",
    "primar": "https://dexcom-reklamations-assistent.vercel.app/",
    "lankar": [
     {
@@ -673,8 +737,8 @@
    "namn": "Föreläsningar",
    "ikon": "🎙️",
    "kategori": "Medicin & utbildning",
-   "senast_aktiv": "2026-10-07T11:26:49.854Z",
-   "beskrivning": "Föreläsningsanteckningar.",
+   "senast_aktiv": "2026-10-07T11:26:50.085Z",
+   "beskrivning": "Föreläsningsanteckningar samlade.",
    "primar": "https://marcdshark666.github.io/forelasningar/",
    "lankar": [
     {
@@ -694,38 +758,12 @@
    ]
   },
   {
-   "id": "spelkontroll",
-   "namn": "Spelkontroll",
-   "ikon": "🕹️",
-   "kategori": "Spel & quiz",
-   "senast_aktiv": "2026-10-05T21:01:50.029Z",
-   "beskrivning": "Styr spel och skärm från mobilen.",
-   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/spel/",
-   "lankar": [
-    {
-     "typ": "tailscale",
-     "etikett": "Tailscale /spel",
-     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/spel/",
-     "status": "uppe",
-     "kraver_tailscale": true
-    },
-    {
-     "typ": "lokal",
-     "etikett": "127.0.0.1:5191 (bara på datorn)",
-     "url": "http://127.0.0.1:5191/",
-     "status": "uppe",
-     "kraver_tailscale": false,
-     "bara_dator": true
-    }
-   ]
-  },
-  {
    "id": "plaud-kalender",
    "namn": "PLAUD Kalender",
    "ikon": "🗓️",
    "kategori": "Medicin & utbildning",
    "senast_aktiv": "2026-10-04T12:18:13.695Z",
-   "beskrivning": "PLAUD-inspelningar och kalender.",
+   "beskrivning": "PLAUD-inspelningar kopplade till kalender.",
    "primar": "https://plaud-kalender.vercel.app/",
    "lankar": [
     {
@@ -738,22 +776,12 @@
    ]
   },
   {
-   "id": "skrivbordet",
-   "namn": "Skrivbordet",
-   "ikon": "🪟",
-   "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-10-04T12:13:52.195Z",
-   "beskrivning": "Se datorn live från mobilen.",
-   "primar": "",
-   "lankar": []
-  },
-  {
    "id": "plaud-syncthing",
    "namn": "PLAUD Syncthing",
    "ikon": "🔄",
    "kategori": "Medicin & utbildning",
    "senast_aktiv": "2026-10-04T12:03:42.741Z",
-   "beskrivning": "Synk av PLAUD-filer.",
+   "beskrivning": "Synk av PLAUD-filer via Syncthing.",
    "primar": "",
    "lankar": []
   },
@@ -762,7 +790,7 @@
    "namn": "Squat Counter",
    "ikon": "🦵",
    "kategori": "Diabetes & hälsa",
-   "senast_aktiv": "2026-10-04T10:11:37.622Z",
+   "senast_aktiv": "2026-10-04T10:11:45.000Z",
    "beskrivning": "Räknar knäböj.",
    "primar": "",
    "lankar": []
@@ -773,7 +801,7 @@
    "ikon": "🧊",
    "kategori": "3D-print & hobby",
    "senast_aktiv": "2026-10-04T09:42:30.094Z",
-   "beskrivning": "3D-objektsida.",
+   "beskrivning": "Sida för 3D-objekt.",
    "primar": "",
    "lankar": []
   },
@@ -783,7 +811,7 @@
    "ikon": "🛍️",
    "kategori": "Ekonomi & affär",
    "senast_aktiv": "2026-10-04T09:42:30.093Z",
-   "beskrivning": "Etsy-butikerna.",
+   "beskrivning": "Samlar Etsy-butikerna.",
    "primar": "",
    "lankar": []
   },
@@ -792,8 +820,8 @@
    "namn": "Olästa meddelanden",
    "ikon": "✉️",
    "kategori": "Kommunikation & vänner",
-   "senast_aktiv": "2026-10-02T06:13:18.159Z",
-   "beskrivning": "Olästa meddelanden samlade.",
+   "senast_aktiv": "2026-10-02T16:42:33.901Z",
+   "beskrivning": "Samlar olästa meddelanden på ett ställe.",
    "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/olasta/",
    "lankar": [
     {
@@ -819,7 +847,7 @@
    "ikon": "🍬",
    "kategori": "Diabetes & hälsa",
    "senast_aktiv": "2026-09-30T22:11:44.000Z",
-   "beskrivning": "Diabetesstöd, centralen.",
+   "beskrivning": "Diabetesstöd, centralen för Sugar Buddy.",
    "primar": "https://sugar-buddy-bot.vercel.app/",
    "lankar": [
     {
@@ -835,9 +863,9 @@
    "id": "svenska-ord",
    "namn": "Svenska Ord",
    "ikon": "🔤",
-   "kategori": "Hem & vardag",
+   "kategori": "Spel & quiz",
    "senast_aktiv": "2026-09-28T21:23:01.136Z",
-   "beskrivning": "Ordspel och ordlistor.",
+   "beskrivning": "Ordspel och ordlistor på svenska.",
    "primar": "https://marcdshark666.github.io/svenska-ord/",
    "lankar": [
     {
@@ -862,7 +890,7 @@
    "ikon": "🚀",
    "kategori": "Verktyg & AI",
    "senast_aktiv": "2026-09-19T23:46:33.512Z",
-   "beskrivning": "Startup-program minimerat och som admin.",
+   "beskrivning": "Startar Windows-program minimerade och som admin.",
    "primar": "",
    "lankar": []
   },
@@ -870,9 +898,9 @@
    "id": "inbox-zero-hero",
    "namn": "Inbox Zero Hero",
    "ikon": "📥",
-   "kategori": "Kommunikation & vänner",
+   "kategori": "Spel & quiz",
    "senast_aktiv": "2026-09-19T01:02:56.838Z",
-   "beskrivning": "Inbox zero-spel.",
+   "beskrivning": "Spel om att tömma inkorgen.",
    "primar": "https://inbox-zero-hero.vercel.app/",
    "lankar": [
     {
@@ -886,7 +914,7 @@
      "typ": "github",
      "etikett": "GitHub repo",
      "url": "https://github.com/marcdshark666/inbox-zero-hero",
-     "status": "ej uppe",
+     "status": "privat",
      "kraver_tailscale": false
     }
    ]
@@ -897,7 +925,7 @@
    "ikon": "📐",
    "kategori": "3D-print & hobby",
    "senast_aktiv": "2026-09-17T10:51:30.269Z",
-   "beskrivning": "3D-kalender (vinext).",
+   "beskrivning": "3D-kalender byggd med vinext.",
    "primar": "",
    "lankar": []
   },
@@ -921,7 +949,7 @@
      "typ": "github",
      "etikett": "GitHub repo",
      "url": "https://github.com/marcdshark666/ddxai",
-     "status": "ej uppe",
+     "status": "privat",
      "kraver_tailscale": false
     }
    ]
@@ -931,8 +959,8 @@
    "namn": "Jobbradar KanDrSwe",
    "ikon": "💼",
    "kategori": "Jobb & karriär",
-   "senast_aktiv": "2026-09-16T10:18:58.595Z",
-   "beskrivning": "Jobb för läkare i Sverige.",
+   "senast_aktiv": "2026-09-16T10:17:17.000Z",
+   "beskrivning": "Jobbradar för läkartjänster i Sverige.",
    "primar": "https://jobbans-kandrswe.vercel.app/",
    "lankar": [
     {
@@ -964,7 +992,7 @@
    "ikon": "💡",
    "kategori": "Verktyg & AI",
    "senast_aktiv": "2026-09-11T04:26:53.691Z",
-   "beskrivning": "Hämtar idéer och bygger appar.",
+   "beskrivning": "Hämtar idéer från tavlan och bygger appar.",
    "primar": "",
    "lankar": []
   },
@@ -1018,7 +1046,32 @@
      "typ": "github",
      "etikett": "GitHub repo",
      "url": "https://github.com/marcdshark666/ward-rush",
-     "status": "ej uppe",
+     "status": "privat",
+     "kraver_tailscale": false
+    }
+   ]
+  },
+  {
+   "id": "session-tracker",
+   "namn": "NEXUS Session Tracker",
+   "ikon": "📊",
+   "kategori": "Verktyg & AI",
+   "senast_aktiv": "2026-09-05T17:00:06.978Z",
+   "beskrivning": "Spårar Claude-sessioner.",
+   "primar": "https://nexus-session-tracker.vercel.app/",
+   "lankar": [
+    {
+     "typ": "vercel",
+     "etikett": "Vercel nexus-session-tracker.vercel.app",
+     "url": "https://nexus-session-tracker.vercel.app/",
+     "status": "uppe",
+     "kraver_tailscale": false
+    },
+    {
+     "typ": "github",
+     "etikett": "GitHub repo",
+     "url": "https://github.com/marcdshark666/nexus-session-tracker",
+     "status": "privat",
      "kraver_tailscale": false
     }
    ]
@@ -1029,7 +1082,7 @@
    "ikon": "🧳",
    "kategori": "Hem & vardag",
    "senast_aktiv": "2026-09-05T10:14:54.018Z",
-   "beskrivning": "Packlistor.",
+   "beskrivning": "Packlistor inför resor.",
    "primar": "https://packing-road.vercel.app/",
    "lankar": [
     {
@@ -1057,7 +1110,7 @@
    "ikon": "🗼",
    "kategori": "Verktyg & AI",
    "senast_aktiv": "2026-08-23T09:08:25.722Z",
-   "beskrivning": "Övervakning.",
+   "beskrivning": "Övervakning av system och aktivitet.",
    "primar": "",
    "lankar": []
   },
@@ -1065,9 +1118,9 @@
    "id": "tornet",
    "namn": "Tornet",
    "ikon": "🏰",
-   "kategori": "Verktyg & AI",
+   "kategori": "Övrigt",
    "senast_aktiv": "2026-08-23T08:54:38.139Z",
-   "beskrivning": "Tornet.",
+   "beskrivning": "Projekt i Work List.",
    "primar": "",
    "lankar": []
   },
@@ -1077,7 +1130,7 @@
    "ikon": "🏢",
    "kategori": "Övrigt",
    "senast_aktiv": "2026-08-23T00:27:26.898Z",
-   "beskrivning": "Kontorsappen.",
+   "beskrivning": "Kontorsappen Munder Difflin.",
    "primar": "",
    "lankar": []
   },
@@ -1087,7 +1140,7 @@
    "ikon": "🏢",
    "kategori": "Övrigt",
    "senast_aktiv": "2026-08-23T00:11:40.841Z",
-   "beskrivning": "Kontoret (extern kod).",
+   "beskrivning": "Kontoret Munder Difflin (extern kod).",
    "primar": "https://github.com/chaitanyagiri/munder-difflin",
    "lankar": [
     {
@@ -1100,51 +1153,26 @@
    ]
   },
   {
-   "id": "session-tracker",
-   "namn": "NEXUS Session Tracker",
-   "ikon": "📊",
-   "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-08-14T16:00:02.886Z",
-   "beskrivning": "Spårar Claude-sessioner.",
-   "primar": "https://nexus-session-tracker.vercel.app/",
-   "lankar": [
-    {
-     "typ": "vercel",
-     "etikett": "Vercel nexus-session-tracker.vercel.app",
-     "url": "https://nexus-session-tracker.vercel.app/",
-     "status": "uppe",
-     "kraver_tailscale": false
-    },
-    {
-     "typ": "github",
-     "etikett": "GitHub repo",
-     "url": "https://github.com/marcdshark666/nexus-session-tracker",
-     "status": "ej uppe",
-     "kraver_tailscale": false
-    }
-   ]
-  },
-  {
    "id": "spindelnatet",
    "namn": "Spindelnät",
    "ikon": "🕸️",
    "kategori": "Kommunikation & vänner",
    "senast_aktiv": "2026-08-12T19:08:35.000Z",
-   "beskrivning": "Kopplingskarta.",
+   "beskrivning": "Kopplingskarta över kontakter.",
    "primar": "https://spindelnatet.vercel.app/",
    "lankar": [
     {
      "typ": "tailscale",
      "etikett": "Tailscale /spindel",
      "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/spindel/",
-     "status": "ej uppe",
+     "status": "servern ej igång",
      "kraver_tailscale": true
     },
     {
      "typ": "lokal",
      "etikett": "127.0.0.1:5197 (bara på datorn)",
      "url": "http://127.0.0.1:5197/",
-     "status": "ej uppe",
+     "status": "servern ej igång",
      "kraver_tailscale": false,
      "bara_dator": true
     },
@@ -1163,7 +1191,7 @@
    "ikon": "✍️",
    "kategori": "Jobb & karriär",
    "senast_aktiv": "2026-08-11T23:19:54.291Z",
-   "beskrivning": "CV och meritbrev med Claude.",
+   "beskrivning": "CV och meritbrev skrivna med Claude.",
    "primar": "https://cv-claude-dar.vercel.app/",
    "lankar": [
     {
@@ -1191,7 +1219,7 @@
    "ikon": "⌨️",
    "kategori": "Verktyg & AI",
    "senast_aktiv": "2026-08-06T06:15:01.561Z",
-   "beskrivning": "Tangentbordsapp där man skriver.",
+   "beskrivning": "Tangentbordsapp där man skriver för hand.",
    "primar": "https://tangentbordsapp-dar-skriva.vercel.app/",
    "lankar": [
     {
@@ -1205,7 +1233,7 @@
      "typ": "github",
      "etikett": "GitHub repo",
      "url": "https://github.com/marcdshark666/tangentbordsapp-dar-skriva",
-     "status": "ej uppe",
+     "status": "privat",
      "kraver_tailscale": false
     }
    ]
@@ -1226,7 +1254,7 @@
    "ikon": "💬",
    "kategori": "Verktyg & AI",
    "senast_aktiv": "2026-08-05T18:44:20.149Z",
-   "beskrivning": "Auto-commit via Telegram.",
+   "beskrivning": "Automatisk commit via Telegram.",
    "primar": "",
    "lankar": []
   },
@@ -1272,7 +1300,7 @@
    "ikon": "📧",
    "kategori": "Kommunikation & vänner",
    "senast_aktiv": "2026-08-04T23:22:59.000Z",
-   "beskrivning": "Svep inkorgen ren.",
+   "beskrivning": "Svep inkorgen ren i Gmail.",
    "primar": "https://gmail-improvement-sliding.vercel.app/",
    "lankar": [
     {
@@ -1290,7 +1318,7 @@
    "ikon": "🌲",
    "kategori": "Hem & vardag",
    "senast_aktiv": "2026-08-02T22:09:42.218Z",
-   "beskrivning": "Kalender som skog.",
+   "beskrivning": "Kalender visualiserad som skog.",
    "primar": "",
    "lankar": []
   },
@@ -1307,10 +1335,10 @@
   {
    "id": "cv-portal",
    "namn": "CV-portal",
-   "ikon": "📄",
+   "ikon": "📑",
    "kategori": "Jobb & karriär",
    "senast_aktiv": "2026-08-02T01:22:56.108Z",
-   "beskrivning": "CV-portal.",
+   "beskrivning": "Portal för CV.",
    "primar": "https://cv-portal-rose.vercel.app/",
    "lankar": [
     {
@@ -1400,7 +1428,7 @@
    "ikon": "🏝️",
    "kategori": "Hem & vardag",
    "senast_aktiv": "2026-08-02T01:22:30.000Z",
-   "beskrivning": "Hitta all inclusive-resor.",
+   "beskrivning": "Hittar all inclusive-resor (SolJakt).",
    "primar": "https://allinclusive-finder.vercel.app/",
    "lankar": [
     {
@@ -1439,7 +1467,7 @@
      "typ": "github",
      "etikett": "GitHub repo",
      "url": "https://github.com/marcdshark666/lilianas-salud",
-     "status": "ej uppe",
+     "status": "privat",
      "kraver_tailscale": false
     }
    ]
@@ -1457,7 +1485,7 @@
      "typ": "github",
      "etikett": "GitHub repo",
      "url": "https://github.com/marcdshark666/gym-3d-streaks",
-     "status": "ej uppe",
+     "status": "privat",
      "kraver_tailscale": false
     }
    ]
@@ -1485,7 +1513,7 @@
    "namn": "Botlabbet",
    "ikon": "🤖",
    "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-07-19T17:18:27.000Z",
+   "senast_aktiv": "2026-07-19T17:18:27.108Z",
    "beskrivning": "Work List-bottar och deras namn.",
    "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/bots/",
    "lankar": [
@@ -1515,18 +1543,19 @@
      "typ": "github",
      "etikett": "GitHub repo",
      "url": "https://github.com/marcdshark666/botlabbet",
-     "status": "ej uppe",
+     "status": "privat",
      "kraver_tailscale": false
     }
-   ]
+   ],
+   "fast_rank": 2
   },
   {
    "id": "resolve-claude-mcp",
    "namn": "Resolve Claude MCP",
    "ikon": "🎬",
    "kategori": "Verktyg & AI",
-   "senast_aktiv": "2026-07-19T08:57:25.534Z",
-   "beskrivning": "DaVinci Resolve via MCP.",
+   "senast_aktiv": "2026-07-19T08:57:19.425Z",
+   "beskrivning": "Styr DaVinci Resolve via MCP.",
    "primar": "https://github.com/barckley75/resolve-claude-mcp",
    "lankar": [
     {
@@ -1542,7 +1571,7 @@
    "id": "language-learning-other",
    "namn": "Språkinlärning",
    "ikon": "🗣️",
-   "kategori": "Verktyg & AI",
+   "kategori": "Hem & vardag",
    "senast_aktiv": null,
    "beskrivning": "Språkinlärning.",
    "primar": "",
@@ -1572,7 +1601,7 @@
    "ikon": "🎡",
    "kategori": "Medicin & utbildning",
    "senast_aktiv": null,
-   "beskrivning": "Slumpa medicinska övningsämnen.",
+   "beskrivning": "Snurrhjul som slumpar medicinska övningsämnen.",
    "primar": "https://medicinskt-snurrhjul.vercel.app/",
    "lankar": [
     {
@@ -1588,7 +1617,7 @@
    "id": "ada-zdrowa",
    "namn": "Ada Zdrowa",
    "ikon": "🇵🇱",
-   "kategori": "Medicin & utbildning",
+   "kategori": "Diabetes & hälsa",
    "senast_aktiv": null,
    "beskrivning": "Hälsoapp på polska.",
    "primar": "https://ada-zdrowa.vercel.app/",

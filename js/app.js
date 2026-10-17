@@ -5,7 +5,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var prio = null, pfilt = '', pkat = '', psok = '', PIK = { 1: '💎', 2: '🥇', 3: '🥈', 4: '🥉' }, PN = { 1: 'Platina', 2: 'Guld', 3: 'Silver', 4: 'Brons' };
   var data = null, man = { overrides: {}, nya: [], dolda: [] }, filter = '', sokord = '';
-  var FARG = { 'Medicin & utbildning': '#2e7d6b', 'Diabetes & hälsa': '#c0475a', 'Ekonomi & affär': '#b08a2e', 'Hem & vardag': '#4a7c3a', 'Spel & quiz': '#c0602b', '3D-print & hobby': '#7a5ea8', 'Verktyg & AI': '#3a6ea5', 'Kommunikation & vänner': '#2b8aa0', 'Jobb & karriär': '#6f7a8a', 'Övrigt': '#6f7a8a' };
+  var FARG = { 'Viktiga hemsidor': '#b5651d', 'Medicin & utbildning': '#2e7d6b', 'Diabetes & hälsa': '#c0475a', 'Ekonomi & affär': '#b08a2e', 'Hem & vardag': '#4a7c3a', 'Spel & quiz': '#c0602b', '3D-print & hobby': '#7a5ea8', 'Verktyg & AI': '#3a6ea5', 'Kommunikation & vänner': '#2b8aa0', 'Jobb & karriär': '#6f7a8a', 'Övrigt': '#6f7a8a' };
   var IKON = { tailscale: '🔒', github: '⚫', vercel: '▲', supabase: '🟢', base44: '🟣', lokal: '🖥️', annat: '🔗' };
   var NAMN = { tailscale: 'Tailscale', github: 'GitHub', vercel: 'Vercel', supabase: 'Supabase', base44: 'Base44', lokal: 'Lokalt' };
 
@@ -141,17 +141,17 @@
     return hay.indexOf(sokord) >= 0;
   }
 
-  function chip(l) {
+  function chip(l, nf) {
     var url = safeUrl(l.url), dod = l.status === 'ej uppe' || l.status === 'borttaget', dim = l.status === 'privat' || l.status === 'servern ej igång' || l.status === 'gammal adress', cls, c, sub;
     if (l.typ === 'lokal') { cls = 'lok'; } else if (l.kraver_tailscale) { cls = 'ts'; } else { cls = 'pub'; }
     if (dim) { cls = 'lok'; }
     if (dod) { cls = 'dod'; }
     if (!url) { cls = 'plan'; }
-    sub = l.typ === 'lokal' ? 'bara på datorn' : l.kraver_tailscale ? 'kräver Tailscale' : l.status === 'privat' ? 'kräver GitHub-inloggning' : l.status === 'servern ej igång' ? 'servern ej igång' : l.status === 'gammal adress' ? 'gammal adress' : l.status === 'borttaget' ? 'borttaget' : l.status === 'planerad' ? 'planerad' : dod ? 'ej uppe' : 'publik';
+    sub = l.kraver_login ? 'publik, kräver egen inloggning' : l.typ === 'lokal' ? 'bara på datorn' : l.kraver_tailscale ? 'kräver Tailscale' : l.status === 'privat' ? 'kräver GitHub-inloggning' : l.status === 'servern ej igång' ? 'servern ej igång' : l.status === 'gammal adress' ? 'gammal adress' : l.status === 'borttaget' ? 'borttaget' : l.status === 'planerad' ? 'planerad' : dod ? 'ej uppe' : 'publik';
     c = el(url ? 'a' : 'span', 'chip ' + cls);
     c.appendChild(document.createTextNode((IKON[l.typ] || '🔗') + ' ' + (NAMN[l.typ] || l.etikett || 'Länk')));
     c.appendChild(el('small', null, sub));
-    if (url) { c.href = url; c.target = '_self'; c.title = l.etikett || ''; }
+    if (url) { c.href = url; c.target = nf ? '_blank' : '_self'; if (nf) { c.rel = 'noopener'; } c.title = l.etikett || ''; }
     return c;
   }
   function kort(a, gammalt) {
@@ -162,18 +162,18 @@
     pbk.onclick = function (e) { if (e && e.stopPropagation) { e.stopPropagation(); } oppnaMeny(a); return false; };
     k.style.setProperty('--c', FARG[a.kategori] || '#3a6ea5');
     hu = el(safeUrl(a.primar) ? 'a' : 'div', 'hu');
-    if (safeUrl(a.primar)) { hu.href = a.primar; hu.target = '_self'; }
+    if (safeUrl(a.primar)) { hu.href = a.primar; hu.target = a.ny_flik ? '_blank' : '_self'; if (a.ny_flik) { hu.rel = 'noopener'; } }
     hu.appendChild(el('span', 'ic', a.ikon || '⭐'));
     tx = el('span', 'tx');
     tx.appendChild(el('span', 'nm', (Number(a.fast_rank) > 0 ? '📌 ' : '') + (a.namn || a.id || 'Namnlös')));
     if (a.beskrivning) { tx.appendChild(el('span', 'bs', a.beskrivning)); }
-    tx.appendChild(el('span', 'tid', 'Senast aktiv för ' + tidSedan(a.senast_aktiv) + ' sedan'));
+    if (a.senast_aktiv) { tx.appendChild(el('span', 'tid', 'Senast aktiv för ' + tidSedan(a.senast_aktiv) + ' sedan')); } else if (a.ny_flik) { tx.appendChild(el('span', 'tid', 'Extern webbplats (öppnas i ny flik)')); }
     hu.appendChild(tx);
     k.appendChild(hu);
     k.appendChild(pbk);
     if (lank.length) {
       ch = el('div', 'chips');
-      for (i = 0; i < lank.length; i++) { ch.appendChild(chip(lank[i])); }
+      for (i = 0; i < lank.length; i++) { ch.appendChild(chip(lank[i], a.ny_flik)); }
       k.appendChild(ch);
     }
     return k;

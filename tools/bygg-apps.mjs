@@ -291,6 +291,9 @@ let ut = lista.filter((a) => !dolda.has(a.id)).map((a) => {
 for (const n of man.nya || []) if (n && n.id && !ut.find((a) => a.id === n.id)) ut.push({ lankar: [], kategori: 'Övrigt', ...n });
 ut.sort((a, b) => String(b.senast_aktiv || '').localeCompare(String(a.senast_aktiv || '')));
 
+// Kategorin 'Viktiga hemsidor' (externa sajter) direkt efter Fästa/Senast.
+const VIKTIGA = 'Viktiga hemsidor';
+if (ut.some((x) => x.kategori === VIKTIGA) || true) { const i = KAT.indexOf(VIKTIGA); if (i >= 0) KAT.splice(i, 1); KAT.unshift(VIKTIGA); }
 const gammal = lasJson(path.join(HEM, 'apps.json'), { rev: 0 });
 const kategorier = [...KAT.filter((k) => ut.some((a) => a.kategori === k)), ...[...new Set(ut.map((a) => a.kategori))].filter((k) => !KAT.includes(k))];
 const doc = { title: 'Hemskärm', rev: (Number(gammal.rev) || 0) + 1, genererad: new Date().toISOString(), kategorier, apps: ut };

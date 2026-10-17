@@ -33,6 +33,99 @@
    "fast_rank": 2
   }
  },
- "nya": [],
+ "nya": [
+  {
+   "id": "printify",
+   "namn": "Printify",
+   "ikon": "🖨️",
+   "kategori": "Viktiga hemsidor",
+   "beskrivning": "Produkter och Pop-Up-butik.",
+   "primar": "https://printify.com/app/",
+   "ny_flik": true,
+   "lankar": [
+    {
+     "typ": "annat",
+     "etikett": "Printify (kräver egen inloggning)",
+     "url": "https://printify.com/app/",
+     "status": "okänd",
+     "kraver_tailscale": false,
+     "kraver_login": true
+    },
+    {
+     "typ": "annat",
+     "etikett": "Pop-Up-butik drjonsson.printify.me",
+     "url": "https://drjonsson.printify.me",
+     "status": "okänd",
+     "kraver_tailscale": false,
+     "kraver_login": false
+    }
+   ]
+  },
+  {
+   "id": "etsy-drjonssondesign",
+   "namn": "Etsy: DrJonssonDesign",
+   "ikon": "🛍️",
+   "kategori": "Viktiga hemsidor",
+   "beskrivning": "Min Etsy-butik och Shop Manager.",
+   "primar": "https://www.etsy.com/shop/DrJonssonDesign",
+   "ny_flik": true,
+   "lankar": [
+    {
+     "typ": "annat",
+     "etikett": "Butiken",
+     "url": "https://www.etsy.com/shop/DrJonssonDesign",
+     "status": "okänd",
+     "kraver_tailscale": false,
+     "kraver_login": false
+    },
+    {
+     "typ": "annat",
+     "etikett": "Shop Manager (kräver egen inloggning)",
+     "url": "https://www.etsy.com/your/shops/me/dashboard",
+     "status": "okänd",
+     "kraver_tailscale": false,
+     "kraver_login": true
+    }
+   ]
+  },
+  {
+   "id": "luna-amazon-pl",
+   "namn": "Luna (Amazon PL)",
+   "ikon": "🎮",
+   "kategori": "Viktiga hemsidor",
+   "beskrivning": "Luna cloud gaming, Amazon Polen.",
+   "primar": "https://luna.amazon.pl/",
+   "ny_flik": true,
+   "lankar": [
+    {
+     "typ": "annat",
+     "etikett": "luna.amazon.pl (kräver egen inloggning)",
+     "url": "https://luna.amazon.pl/",
+     "status": "okänd",
+     "kraver_tailscale": false,
+     "kraver_login": true
+    }
+   ]
+  },
+  {
+   "id": "makerworld",
+   "namn": "MakerWorld",
+   "ikon": "🧩",
+   "kategori": "Viktiga hemsidor",
+   "beskrivning": "3D-modeller att skriva ut (Bambu Lab).",
+   "primar": "https://makerworld.com/",
+   "ny_flik": true,
+   "lankar": [
+    {
+     "typ": "annat",
+     "etikett": "makerworld.com",
+     "url": "https://makerworld.com/",
+     "status": "okänd",
+     "kraver_tailscale": false,
+     "kraver_login": false
+    }
+   ]
+  }
+ ],
  "dolda": []
 }

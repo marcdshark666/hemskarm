@@ -1,7 +1,7 @@
 {
  "title": "Hemskärm",
- "rev": 7,
- "genererad": "2026-10-17T16:38:03.982Z",
+ "rev": 9,
+ "genererad": "2026-10-17T16:44:29.446Z",
  "kategorier": [
   "Medicin & utbildning",
   "Diabetes & hälsa",
@@ -584,6 +584,33 @@
     }
    ],
    "fast_rank": 1
+  },
+  {
+   "id": "work-list-bots",
+   "namn": "Work List Bots",
+   "ikon": "🤖",
+   "kategori": "Verktyg & AI",
+   "senast_aktiv": "2026-10-16T19:48:21.315Z",
+   "beskrivning": "Botarna: aktivitet, namn och uppdrag (Marcs bot).",
+   "primar": "https://desktop-r13nmtb.tailf9ee87.ts.net/bots/",
+   "lankar": [
+    {
+     "typ": "tailscale",
+     "etikett": "Tailscale /bots",
+     "url": "https://desktop-r13nmtb.tailf9ee87.ts.net/bots/",
+     "status": "uppe",
+     "kraver_tailscale": true
+    },
+    {
+     "typ": "lokal",
+     "etikett": "127.0.0.1:5198 (bara på datorn)",
+     "url": "http://127.0.0.1:5198/",
+     "status": "uppe",
+     "kraver_tailscale": false,
+     "bara_dator": true
+    }
+   ],
+   "fast_rank": 2
   },
   {
    "id": "skarmstyrning",
@@ -1546,8 +1573,7 @@
      "status": "privat",
      "kraver_tailscale": false
     }
-   ],
-   "fast_rank": 2
+   ]
   },
   {
    "id": "resolve-claude-mcp",

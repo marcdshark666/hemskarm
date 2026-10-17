@@ -11,7 +11,7 @@ with sync_playwright() as p:
         n=pg.locator('.kort').count(); h2=pg.locator('h2').all_inner_texts()
         links=pg.locator('a.chip').count(); hu=pg.locator('a.hu').count()
         small=pg.evaluate("Array.from(document.querySelectorAll('a.hu')).filter(a=>a.getBoundingClientRect().height<88).length")
-        print(w,h,'kort',n,'chips',links,'hu',hu,'<88px',small,'? namn:',t.count('?'),'err',err,'first h2',h2[:2])
+        hs=pg.evaluate('document.documentElement.scrollWidth>document.documentElement.clientWidth'); print('sidled',hs,'fast',pg.locator('h2').first.inner_text().split(chr(10))[0],[x.split(chr(10))[0] for x in pg.locator('.rutnat').first.locator('.nm').all_inner_texts()],w,h,'kort',n,'chips',links,'hu',hu,'<88px',small,'? namn:',t.count('?'),'err',err,'first h2',h2[:2])
         pg.screenshot(path=f'test/ny-{w}x{h}.png')
         pg.close()
     pg=b.new_page(viewport={'width':1024,'height':768}); pg.goto(U); pg.wait_for_selector('.kort')

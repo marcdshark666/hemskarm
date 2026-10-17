@@ -3,6 +3,7 @@
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
+  var prio = null, pfilt = '', pkat = '', psok = '', PIK = { 1: '💎', 2: '🥇', 3: '🥈', 4: '🥉' }, PN = { 1: 'Platina', 2: 'Guld', 3: 'Silver', 4: 'Brons' };
   var data = null, man = { overrides: {}, nya: [], dolda: [] }, filter = '', sokord = '';
   var FARG = { 'Medicin & utbildning': '#2e7d6b', 'Diabetes & hälsa': '#c0475a', 'Ekonomi & affär': '#b08a2e', 'Hem & vardag': '#4a7c3a', 'Spel & quiz': '#c0602b', '3D-print & hobby': '#7a5ea8', 'Verktyg & AI': '#3a6ea5', 'Kommunikation & vänner': '#2b8aa0', 'Jobb & karriär': '#6f7a8a', 'Övrigt': '#6f7a8a' };
   var IKON = { tailscale: '🔒', github: '⚫', vercel: '▲', supabase: '🟢', base44: '🟣', lokal: '🖥️', annat: '🔗' };
@@ -12,7 +13,7 @@
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (text !== undefined) { e.textContent = text; } return e; }
   function safeUrl(u) { u = String(u || '').trim(); return /^https?:\/\//i.test(u) ? u : ''; }
-  function show(id) { ['home', 'edit'].forEach(function (x) { $(x).style.display = x === id ? 'block' : 'none'; }); window.scrollTo(0, 0); }
+  function show(id) { ['home', 'edit', 'prio'].forEach(function (x) { $(x).style.display = x === id ? 'block' : 'none'; }); window.scrollTo(0, 0); }
 
   function loadMan() {
     try {
@@ -36,14 +37,20 @@
     return a;
   }
   function effektiva() {
-    var ut = [], i, a, o;
+    var ut = [], i, a, o, ids;
     for (i = 0; i < data.apps.length; i++) {
       a = data.apps[i];
       if (man.dolda.indexOf(a.id) >= 0) { continue; }
       o = man.overrides[a.id];
-      ut.push(norm(o ? Object.assign({}, a, o) : a));
+      if (o) {
+        a = Object.assign({}, a, o);
+        if (o.lankar_add && o.lankar_add.length) { a.lankar = (o.lankar || data.apps[i].lankar || []).concat(o.lankar_add); }
+      }
+      ut.push(norm(a));
     }
-    return ut.concat(man.nya.map(norm));
+    ids = {};
+    data.apps.forEach(function (x) { ids[x.id] = 1; });
+    return ut.concat(man.nya.filter(function (x) { return !ids[x.id]; }).map(norm));
   }
   function tidSedan(iso) {
     if (!iso) { return 'okänt'; }
@@ -57,11 +64,78 @@
     return Math.round(m / 43200) + ' mån';
   }
   var ms = function (a) { return a.senast_aktiv ? new Date(a.senast_aktiv).getTime() || 0 : 0; };
-  function nyast(x, y) { return ms(y) - ms(x); }
-
+  var pend = {};
+  try { pend = JSON.parse(load('hs_prio_lokal') || '{}') || {}; } catch (e) { pend = {}; }
+  function savePend() { store('hs_prio_lokal', JSON.stringify(pend)); }
+  function getPrio(a) {
+    var v = pend[a.id] !== undefined ? pend[a.id] : (prio ? prio[a.id] : a.prio);
+    return v >= 1 && v <= 4 ? Number(v) : 0;
+  }
+  function nyast(x, y) {
+    var px = getPrio(x) || 5, py = getPrio(y) || 5;
+    if (px !== py) { return px - py; }
+    if (x.ordning !== undefined && x.ordning !== '' && y.ordning !== undefined && y.ordning !== '') { return Number(x.ordning) - Number(y.ordning); }
+    return ms(y) - ms(x);
+  }
+  function postPrio(id, p, cb) {
+    var x = new XMLHttpRequest();
+    x.open('POST', 'api/prio', true);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.onreadystatechange = function () { if (x.readyState === 4) { cb(x.status === 200); } };
+    try { x.send(JSON.stringify({ id: id, prio: p || null })); } catch (e) { cb(false); }
+  }
+  function uppdatera() { renderHome(); if ($('prio').style.display === 'block') { renderPrio(); } }
+  function setPrio(a, p) {
+    pend[a.id] = p || 0; savePend();
+    uppdatera();
+    postPrio(a.id, p, function (ok) {
+      if (ok) {
+        if (!prio) { prio = {}; }
+        if (p) { prio[a.id] = p; } else { delete prio[a.id]; }
+        delete pend[a.id]; savePend();
+        $('stampel').textContent = 'Prio sparad.';
+      } else {
+        $('stampel').textContent = 'Prio sparades lokalt (servern nåddes inte). Försöker igen vid nästa laddning.';
+      }
+      uppdatera();
+    });
+  }
+  function skickaVantande() {
+    Object.keys(pend).forEach(function (id) {
+      var p = pend[id];
+      postPrio(id, p, function (ok) {
+        if (ok) { if (!prio) { prio = {}; } if (p) { prio[id] = p; } else { delete prio[id]; } delete pend[id]; savePend(); uppdatera(); }
+      });
+    });
+  }
+  function oppnaMeny(a) {
+    var ov = el('div', 'pmeny'), sh = el('div', 'psheet'), cur = getPrio(a), n;
+    function stang() { if (ov.parentNode) { ov.parentNode.removeChild(ov); } }
+    sh.appendChild(el('div', 'ptit', (a.ikon || '') + ' ' + a.namn + ': välj prio'));
+    [1, 2, 3, 4].forEach(function (k) {
+      var b = el('button', 'pval' + (cur === k ? ' pa' : ''), PIK[k] + ' ' + PN[k] + ' (' + k + ')');
+      b.type = 'button';
+      b.onclick = function (e) { e.stopPropagation(); stang(); setPrio(a, k); };
+      sh.appendChild(b);
+    });
+    n = el('button', 'pval' + (cur === 0 ? ' pa' : ''), 'Ingen prio');
+    n.type = 'button';
+    n.onclick = function (e) { e.stopPropagation(); stang(); setPrio(a, 0); };
+    sh.appendChild(n);
+    n = el('button', 'pval avbryt', 'Avbryt');
+    n.type = 'button';
+    n.onclick = function (e) { e.stopPropagation(); stang(); };
+    sh.appendChild(n);
+    sh.onclick = function (e) { e.stopPropagation(); };
+    ov.onclick = stang;
+    ov.appendChild(sh);
+    document.body.appendChild(ov);
+  }
   function matchar(a) {
     var hay;
     if (filter && a.kategori !== filter) { return false; }
+    if (pfilt === 'x' && getPrio(a)) { return false; }
+    if (pfilt && pfilt !== 'x' && getPrio(a) !== Number(pfilt)) { return false; }
     if (!sokord) { return true; }
     hay = [a.namn, a.kategori, a.beskrivning].concat((a.lankar || []).map(function (l) { return l.etikett + ' ' + l.typ + ' ' + l.url; })).join(' ').toLowerCase();
     return hay.indexOf(sokord) >= 0;
@@ -81,7 +155,11 @@
     return c;
   }
   function kort(a, gammalt) {
-    var k = el('div', 'kort' + (gammalt ? ' gammal' : '') + (safeUrl(a.primar) ? '' : ' utan')), hu, tx, ch, i, lank = a.lankar || [];
+    var pbk, k = el('div', 'kort' + (gammalt ? ' gammal' : '') + (safeUrl(a.primar) ? '' : ' utan')), hu, tx, ch, i, lank = a.lankar || [];
+    k.style.position = 'relative';
+    pbk = el('button', 'pb', getPrio(a) ? PIK[getPrio(a)] : '☆');
+    pbk.type = 'button'; pbk.title = getPrio(a) ? 'Prio ' + getPrio(a) + ' ' + PN[getPrio(a)] + ' (tryck för att ändra)' : 'Sätt prio';
+    pbk.onclick = function (e) { if (e && e.stopPropagation) { e.stopPropagation(); } oppnaMeny(a); return false; };
     k.style.setProperty('--c', FARG[a.kategori] || '#3a6ea5');
     hu = el(safeUrl(a.primar) ? 'a' : 'div', 'hu');
     if (safeUrl(a.primar)) { hu.href = a.primar; hu.target = '_self'; }
@@ -92,6 +170,7 @@
     tx.appendChild(el('span', 'tid', 'Senast aktiv för ' + tidSedan(a.senast_aktiv) + ' sedan'));
     hu.appendChild(tx);
     k.appendChild(hu);
+    k.appendChild(pbk);
     if (lank.length) {
       ch = el('div', 'chips');
       for (i = 0; i < lank.length; i++) { ch.appendChild(chip(lank[i])); }
@@ -122,11 +201,53 @@
     knapp('Alla', '');
     for (i = 0; i < kats.length; i++) { knapp(kats[i], kats[i]); }
   }
+  function renderPFilter() {
+    var f = $('pfilter'), v = [['', 'Alla prio'], ['1', PIK[1] + ' 1'], ['2', PIK[2] + ' 2'], ['3', PIK[3] + ' 3'], ['4', PIK[4] + ' 4'], ['x', 'Ej satt']];
+    f.innerHTML = '';
+    v.forEach(function (e) {
+      var b = el('button', 'fknapp' + (pfilt === e[0] ? ' pa' : ''), e[1]);
+      b.type = 'button';
+      b.onclick = function () { pfilt = e[0]; renderHome(); };
+      f.appendChild(b);
+    });
+  }
+  function renderPrio() {
+    var alla = effektiva(), box = $('plist'), cnt = [0, 0, 0, 0, 0], sel = $('pvsel'), kats = (data.kategorier || []).slice(), q = psok, y;
+    alla.forEach(function (a) { cnt[getPrio(a)]++; if (kats.indexOf(a.kategori) < 0) { kats.push(a.kategori); } });
+    $('pcount').innerHTML = '';
+    [1, 2, 3, 4].forEach(function (n) { $('pcount').appendChild(el('span', null, PIK[n] + ' ' + n + ': ' + cnt[n])); });
+    $('pcount').appendChild(el('span', null, 'Ej satt: ' + cnt[0]));
+    if (!sel.options.length) {
+      sel.appendChild(new Option('Alla kategorier', ''));
+      kats.forEach(function (k) { sel.appendChild(new Option(k, k)); });
+      sel.onchange = function () { pkat = sel.value; renderPrio(); };
+    }
+    box.innerHTML = '';
+    alla.filter(function (a) {
+      return (!pkat || a.kategori === pkat) && (!q || (a.namn + ' ' + a.kategori).toLowerCase().indexOf(q) >= 0);
+    }).sort(nyast).forEach(function (a) {
+      var r = el('div', 'prad'), n = el('div', 'pn', (a.ikon || '') + ' ' + a.namn), kn = el('div', 'pk');
+      n.appendChild(el('small', null, a.kategori));
+      [1, 2, 3, 4].forEach(function (p) {
+        var b = el('button', 'pb' + (getPrio(a) === p ? ' pa' : ''), PIK[p] + ' ' + p);
+        b.type = 'button'; b.title = PN[p];
+        b.onclick = function () { setPrio(a, p); };
+        kn.appendChild(b);
+      });
+      y = el('button', 'pb ing' + (getPrio(a) ? '' : ' pa'), 'ingen');
+      y.type = 'button';
+      y.onclick = function () { setPrio(a, 0); };
+      kn.appendChild(y);
+      r.appendChild(n); r.appendChild(kn);
+      box.appendChild(r);
+    });
+  }
   function renderHome() {
     var g = $('grid'), alla = effektiva(), vis, senaste, fast, gr = Date.now() - 7 * 86400000, kats;
     g.innerHTML = '';
     $('rubrik').textContent = data.title || 'Hemskärm';
     renderFilter(alla);
+    renderPFilter();
     vis = alla.filter(matchar).sort(nyast);
     senaste = vis.filter(function (a) { return ms(a) >= gr; });
     fast = vis.filter(function (a) { return Number(a.fast_rank) > 0; }).sort(function (x, y) { return Number(x.fast_rank) - Number(y.fast_rank); });
@@ -150,11 +271,52 @@
     }
     saveMan();
   }
+  function flytta(lista, i, d) {
+    var j = i + d, t;
+    if (j < 0 || j >= lista.length) { return; }
+    t = lista[i]; lista[i] = lista[j]; lista[j] = t;
+    lista.forEach(function (a, k) { sattFalt(a, 'ordning', k + 1); });
+    renderEdit();
+  }
+  function lankRader(a) {
+    var w = el('div', 'ed'), lank = (a.lankar || []).map(function (l) { return Object.assign({}, l); }), TYP = ['tailscale', 'github', 'vercel', 'supabase', 'base44', 'lokal', 'annat'];
+    w.style.width = '100%'; w.style.background = '#1b202a';
+    function spara() { sattFalt(a, 'lankar', lank.map(function (l) { return Object.assign({}, l); })); }
+    function rita() {
+      w.innerHTML = '';
+      lank.forEach(function (l, i) {
+        var r = el('div', null), t = el('select'), e = el('input'), u = el('input'), d = el('a', 'liten del', 'Ta bort');
+        r.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;width:100%;align-items:center';
+        TYP.forEach(function (x) { var o = el('option', null, x); o.value = x; if (x === l.typ) { o.selected = true; } t.appendChild(o); });
+        t.onchange = function () { l.typ = t.value; l.kraver_tailscale = t.value === 'tailscale'; spara(); };
+        e.type = 'text'; e.value = l.etikett || ''; e.placeholder = 'Etikett'; e.style.flex = '1 1 140px';
+        e.oninput = function () { l.etikett = e.value; spara(); };
+        u.type = 'url'; u.value = l.url || ''; u.placeholder = 'https://...'; u.style.flex = '3 1 220px';
+        u.oninput = function () { l.url = u.value; spara(); };
+        d.href = '#'; d.onclick = function () { lank.splice(i, 1); spara(); rita(); return false; };
+        [t, e, u].forEach(function (x) { x.style.minHeight = '44px'; x.style.fontSize = '15px'; });
+        r.appendChild(t); r.appendChild(e); r.appendChild(u); r.appendChild(d); w.appendChild(r);
+      });
+      var nb = el('a', 'liten', '+ länk'); nb.href = '#';
+      nb.onclick = function () { lank.push({ typ: 'annat', etikett: '', url: '', status: 'okänd', kraver_tailscale: false }); spara(); rita(); return false; };
+      w.appendChild(nb);
+    }
+    rita();
+    return w;
+  }
   function renderEdit() {
-    var box = $('editlist'), alla = effektiva(), kats = data.kategorier || [];
+    var box = $('editlist'), alla = effektiva(), kats = data.kategorier || [], lista;
     box.innerHTML = '';
-    alla.sort(nyast).forEach(function (a) {
-      var row = el('div', 'ed'), n, ik, u, sel, del, rk;
+    alla.sort(function (x, y) {
+      var ox = x.ordning === undefined || x.ordning === '' ? null : Number(x.ordning), oy = y.ordning === undefined || y.ordning === '' ? null : Number(y.ordning);
+      if (ox !== null && oy !== null && ox !== oy) { return ox - oy; }
+      if (ox !== null && oy === null) { return -1; }
+      if (ox === null && oy !== null) { return 1; }
+      return nyast(x, y);
+    });
+    lista = alla;
+    alla.forEach(function (a, idx) {
+      var row = el('div', 'ed'), n, ik, u, sel, del, rk, up, ner, sn;
       n = el('input'); n.type = 'text'; n.className = 'f1'; n.value = a.namn || ''; n.placeholder = 'Namn';
       n.oninput = function () { sattFalt(a, 'namn', n.value); };
       ik = el('input'); ik.type = 'text'; ik.className = 'f2'; ik.value = a.ikon || ''; ik.placeholder = 'Ikon';
@@ -173,12 +335,32 @@
         if (a._ny) { man.nya = man.nya.filter(function (x) { return x.id !== a.id; }); } else { man.dolda.push(a.id); }
         saveMan(); renderEdit(); return false;
       };
-      row.appendChild(n); row.appendChild(ik); row.appendChild(u); row.appendChild(rk); row.appendChild(sel); row.appendChild(del);
+      up = el('a', 'liten', '↑'); up.href = '#'; up.title = 'Flytta upp';
+      up.onclick = function () { flytta(lista, idx, -1); return false; };
+      ner = el('a', 'liten', '↓'); ner.href = '#'; ner.title = 'Flytta ner';
+      ner.onclick = function () { flytta(lista, idx, 1); return false; };
+      sn = el('input'); sn.type = 'text'; sn.className = 'f4'; sn.value = a.senast_aktiv || ''; sn.placeholder = 'Senast aktiv (ISO, t.ex. 2026-10-17T12:00:00Z)';
+      sn.onchange = function () { if (sn.value === '' || !isNaN(Date.parse(sn.value))) { sattFalt(a, 'senast_aktiv', sn.value); } else { sn.value = a.senast_aktiv || ''; } };
+      row.appendChild(n); row.appendChild(ik); row.appendChild(u); row.appendChild(rk); row.appendChild(sel); row.appendChild(sn);
+      row.appendChild(up); row.appendChild(ner); row.appendChild(del);
+      row.appendChild(lankRader(a));
       box.appendChild(row);
     });
-    if (man.dolda.length) { box.appendChild(el('p', 'msg', 'Dolda: ' + man.dolda.join(', '))); }
+    if (man.dolda.length) {
+      box.appendChild(el('h2', null, 'Dolda (' + man.dolda.length + ')'));
+      man.dolda.forEach(function (id) {
+        var r = el('div', 'ed'), b = el('a', 'liten', 'Ångra (visa igen)');
+        r.appendChild(el('span', null, id));
+        b.href = '#';
+        b.onclick = function () { man.dolda = man.dolda.filter(function (x) { return x !== id; }); saveMan(); renderEdit(); return false; };
+        r.appendChild(b); box.appendChild(r);
+      });
+    }
   }
   function setup() {
+    $('priobtn').onclick = function () { renderPrio(); show('prio'); return false; };
+    $('pdonebtn').onclick = function () { renderHome(); show('home'); return false; };
+    $('psok').oninput = function () { psok = this.value.trim().toLowerCase(); renderPrio(); };
     $('editbtn').onclick = function () { renderEdit(); show('edit'); return false; };
     $('donebtn').onclick = function () { renderHome(); show('home'); return false; };
     $('addbtn').onclick = function () {
@@ -202,6 +384,9 @@
       return r.json();
     }).then(function (d) {
       data = d; loadMan(); setup(); renderHome(); show('home');
+      return fetch('api/prio', { cache: 'no-store', credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+        if (j && j.prio) { prio = j.prio; renderHome(); skickaVantande(); }
+      }).catch(function () {});
     }).catch(function () { $('grid').appendChild(el('p', 'msg', 'Kunde inte läsa apps.json. Ladda om.')); });
   }
   init();

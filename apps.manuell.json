@@ -1,16 +1,37 @@
 {
  "_hjalp": "Manuella ändringar som slås ihop av tools/bygg-apps.mjs (manuellt vinner). fast_rank = ordning i sektionen Fästa (lägst först).",
  "overrides": {
-  "boss": {"fast_rank": 1},
-  "botlabbet": {"fast_rank": 2},
-  "the-work-list": {"fast_rank": 3},
-  "bt-start": {"fast_rank": 4, "namn": "BT-läkare (BT-start)"},
-  "hemskarm": {"fast_rank": 5},
-  "tailscale-hemsidor": {"fast_rank": 5},
-  "marcs-halsoai": {"fast_rank": 6},
-  "husvakten": {"fast_rank": 7},
-  "aaron-prints": {"fast_rank": 8},
-  "filer-privat": {"fast_rank": 8}
+  "boss": {
+   "fast_rank": 1
+  },
+  "the-work-list": {
+   "fast_rank": 3
+  },
+  "bt-start": {
+   "fast_rank": 4,
+   "namn": "BT-läkare (BT-start)"
+  },
+  "hemskarm": {
+   "fast_rank": 5
+  },
+  "tailscale-hemsidor": {
+   "fast_rank": 5
+  },
+  "marcs-halsoai": {
+   "fast_rank": 6
+  },
+  "husvakten": {
+   "fast_rank": 7
+  },
+  "aaron-prints": {
+   "fast_rank": 8
+  },
+  "filer-privat": {
+   "fast_rank": 8
+  },
+  "work-list-bots": {
+   "fast_rank": 2
+  }
  },
  "nya": [],
  "dolda": []

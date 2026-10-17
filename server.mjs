@@ -78,6 +78,27 @@ function skickaFil(req, res, data, typ) {
   return skicka(res, 206, req.method === 'HEAD' ? '' : del, typ, { ...bas, 'Content-Range': `bytes ${start}-${slut}/${storlek}`, 'Content-Length': del.length });
 }
 
+// Prio 1-4 (1 = platina) per app-id, delas mellan enheter. Skrivs atomiskt till data/prio.json. Bara bakom sessionen (grinden ovan).
+const PRIOFIL = path.join(ROT, 'data', 'prio.json');
+function lasPrio() { try { const o = JSON.parse(fs.readFileSync(PRIOFIL, 'utf8')); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; } catch { return {}; } }
+function appIds() { try { return new Set((JSON.parse(fs.readFileSync(path.join(ROT, 'apps.json'), 'utf8')).apps || []).map((a) => String(a.id))); } catch { return new Set(); } }
+async function hanteraPrio(req, res) {
+  if (req.method === 'GET' || req.method === 'HEAD') return skicka(res, 200, JSON.stringify({ prio: lasPrio() }), 'application/json; charset=utf-8');
+  if (req.method !== 'POST') return skicka(res, 405, 'Metod ej tillåten', undefined, { Allow: 'GET, HEAD, POST' });
+  if (!/^application\/json/i.test(String(req.headers['content-type'] || ''))) return skicka(res, 415, 'Kräver application/json');
+  let b;
+  try { b = JSON.parse(await lasKropp(req, 2000)); } catch { return skicka(res, 400, 'Ogiltig JSON'); }
+  const id = b && typeof b.id === 'string' ? b.id : '';
+  const p = b ? b.prio : undefined;
+  if (!id || id.length > 100 || !appIds().has(id)) return skicka(res, 400, 'Okänt id');
+  if (!(p === null || (Number.isInteger(p) && p >= 1 && p <= 4))) return skicka(res, 400, 'prio måste vara 1-4 eller null');
+  const nu = lasPrio();
+  if (p === null) delete nu[id]; else nu[id] = p;
+  const tmp = PRIOFIL + '.tmp';
+  try { fs.writeFileSync(tmp, JSON.stringify(nu, null, 1)); fs.renameSync(tmp, PRIOFIL); } catch (e) { console.error(e.message); return skicka(res, 500, 'Kunde inte spara'); }
+  return skicka(res, 200, JSON.stringify({ ok: true, prio: nu }), 'application/json; charset=utf-8');
+}
+
 async function hantera(req, res) {
   const v = vag(req);
   if (v === null) return skicka(res, 400, 'Ogiltig sökväg');
@@ -99,6 +120,7 @@ async function hantera(req, res) {
     return omdirigera(res, `${PREFIX}/logga-in`, { 'Set-Cookie': kakRad(req, '', 0) });
   }
   if (!(arLokal(req) || auth.giltig(kaka(req)))) return omdirigera(res, `${PREFIX}/logga-in`);
+  if (v === '/api/prio') return hanteraPrio(req, res);
   if (req.method !== 'GET' && req.method !== 'HEAD') return skicka(res, 405, 'Metod ej tillåten', undefined, { Allow: 'GET, HEAD' });
   if (v === '/js/config.js') return skickaFil(req, res, Buffer.from(CONFIG_JS), 'text/javascript; charset=utf-8');
   const nyckel = v === '/' ? '/index.html' : v;

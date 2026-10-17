@@ -12,6 +12,31 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="style.css?v=3">
+<style>
+.topp .kn{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pfilter{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.pb{display:inline-flex;align-items:center;justify-content:center;min-width:56px;min-height:56px;margin:0;padding:0 6px;border:0;border-radius:12px;background:#2b3240;color:#f2f4f8;font-size:26px;cursor:pointer;-webkit-appearance:none;appearance:none}
+.kort .hu{position:relative}
+.kort .pb{flex:0 0 56px;margin-right:10px;margin-top:10px;align-self:flex-start;position:absolute;right:0;top:0;background:transparent;font-size:24px;min-width:56px}
+.kort .hu .tx{padding-right:44px}
+.pcount{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 10px;font-size:17px}
+.pcount span{background:#222834;border-radius:20px;padding:8px 14px}
+.prad{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:#222834;border-radius:14px;padding:10px 12px;margin:8px 0}
+.prad .pn{flex:1 1 220px;min-width:0;font-size:20px;font-weight:bold}
+.prad .pn small{display:block;font-size:13px;font-weight:normal;color:#9aa4b5}
+.prad .pk{display:flex;gap:6px;flex-wrap:wrap}
+.prad .pb{min-width:64px;min-height:64px;font-size:24px}
+.prad .pb.pa{background:#3a6ea5;outline:3px solid #e8b04b}
+.prad .pb.ing{font-size:15px;min-width:72px}
+#pvsel{display:block;width:100%;min-height:48px;font-size:18px;padding:6px 10px;margin:8px 0;border:2px solid #3a4356;border-radius:10px;background:#0f1218;color:#f2f4f8}
+.kort .pb{min-width:48px;min-height:48px;font-size:26px;z-index:2}
+.pmeny{position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(0,0,0,.6);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.psheet{width:100%;max-width:560px;background:#222834;border-radius:20px 20px 0 0;padding:14px 14px 28px}
+.psheet .ptit{font-size:18px;color:#9aa4b5;margin:4px 6px 10px}
+.pval{display:block;width:100%;min-height:68px;margin:8px 0;border:0;border-radius:14px;background:#2b3240;color:#f2f4f8;font-size:24px;text-align:left;padding:0 18px;-webkit-appearance:none;appearance:none}
+.pval.pa{background:#3a6ea5;outline:3px solid #e8b04b}
+.pval.avbryt{background:#3a2b2b;text-align:center;font-size:20px;min-height:56px}
+</style>
 </head>
 <body>
 <noscript><p class="msg">JavaScript krävs.</p></noscript>
@@ -19,10 +44,11 @@
 <div id="home" class="vy">
   <div class="topp">
     <h1 id="rubrik">Hemskärm</h1>
-    <a href="#" id="editbtn" class="liten">Redigera</a>
+    <div class="kn"><a href="#" id="priobtn" class="liten">⭐ Prioritera</a><a href="#" id="editbtn" class="liten">Redigera</a></div>
   </div>
   <div class="verktyg">
     <input id="sok" type="search" placeholder="Sök app, kategori eller länk" autocomplete="off" autocapitalize="off" autocorrect="off">
+    <div id="pfilter" class="pfilter"></div>
     <div id="filter" class="filter"></div>
     <p class="forklaring"><span class="chip ts">🔒 Tailscale</span> kräver Tailscale på enheten &nbsp; <span class="chip pub">🌐 publik</span> öppen adress &nbsp; <span class="chip dod">ej uppe</span> svarade inte vid senaste bygget</p>
   </div>
@@ -30,12 +56,24 @@
   <p id="stampel" class="msg"></p>
 </div>
 
+<div id="prio" class="vy" style="display:none">
+  <div class="topp">
+    <h1>Prioritera</h1>
+    <a href="#" id="pdonebtn" class="liten">Klar</a>
+  </div>
+  <p class="msg">Tryck 💎 1, 🥇 2, 🥈 3 eller 🥉 4 på varje app. Sparas på servern och följer med mellan iPad, dator och telefon.</p>
+  <div id="pcount" class="pcount"></div>
+  <input id="psok" type="search" placeholder="Sök app" autocomplete="off" autocapitalize="off" autocorrect="off" style="display:block;width:100%;min-height:52px;font-size:20px;padding:8px 14px;border:2px solid #3a4356;border-radius:12px;background:#0f1218;color:#f2f4f8">
+  <select id="pvsel"></select>
+  <div id="plist"></div>
+</div>
+
 <div id="edit" class="vy" style="display:none">
   <div class="topp">
     <h1>Redigera</h1>
     <a href="#" id="donebtn" class="liten">Klar</a>
   </div>
-  <p class="msg">Dina ändringar läggs ovanpå den genererade listan och försvinner inte när listan byggs om. Spara permanent: Visa JSON och skicka till Boss (apps.manuell.json).</p>
+  <p class="msg">Dina ändringar läggs ovanpå den genererade listan och försvinner inte när listan byggs om. Lokala ändringar på den här enheten vinner över nya värden i apps.json. Spara permanent: Visa JSON och skicka till Boss (apps.manuell.json).</p>
   <div id="editlist"></div>
   <div class="rad">
     <a href="#" id="addbtn" class="liten">+ Lägg till</a>
@@ -47,6 +85,6 @@
 </div>
 
 <script src="js/config.js?v=1"></script>
-<script src="js/app.js?v=3"></script>
+<script src="js/app.js?v=5"></script>
 </body>
 </html>

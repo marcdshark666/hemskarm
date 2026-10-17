@@ -74,6 +74,7 @@ const M = {
   'tailscale-hemsidor': { k: 6, i: '🔒', n: 'Tailscale-sidor', b: 'Register över alla privata sidor.', ts: 'sidor' },
   'hemskarm': { k: 6, i: '🏡', n: 'Hemskärm', b: 'Den här sidan.', ts: 'hemskarm', dir: 'hemskarm' },
   'boss': { k: 6, i: '👑', n: 'BOSS BOT / vakthundar', b: 'Chefen och vakthundarna: status och uppdrag i Botlabbet.', ts: 'bots', dir: 'worklist-bots', },
+  'work-list-bots': { k: 6, i: '🤖', n: 'Work List Bots', b: 'Botarna: aktivitet, namn och uppdrag (Marcs bot).', ts: 'bots', dir: 'worklist-bots' },
   'botlabbet': { k: 6, i: '🤖', n: 'Botlabbet', b: 'Work List-bottar och deras namn.', ts: 'bots', v: [V('botlabbet')] },
   'uppdateringsvakt': { k: 6, i: '🛡️', n: 'Uppdateringsvakt', b: 'Vakt för uppdateringar.' },
   'server-uppdaterare': { k: 6, i: '♻️', n: 'Server-uppdaterare', b: 'Startar om app-servrar efter kodändring.', dir: 'server-uppdaterare' },
@@ -104,7 +105,7 @@ const M = {
   'cv-claude-dar': { k: 8, i: '✍️', n: 'Meritbrev & CV', b: 'CV och meritbrev med Claude.', v: [V('cv-claude-dar')] },
 };
 // Vercel-projekt utan Work List-kort: lägg bara med om mappen finns eller listan säger det.
-const EXTRA_IDS = ['boss', 'bt-start', 'vanner', 'forelasningar', 'hemskarm', 'filer-privat', 'server-uppdaterare', 'squat-counter', 'hemmaracet', 'bambu-elegoo-profiler', 'plaud-syncthing', 'resolve-claude-mcp', 'kliniskt', 'vanskapsapp', 'medicinskt-snurrhjul', 'ada-zdrowa', 'bertils-halsoai', 'lilianas-salud', 'gym-3d-streaks'];
+const EXTRA_IDS = ['boss', 'work-list-bots', 'bt-start', 'vanner', 'forelasningar', 'hemskarm', 'filer-privat', 'server-uppdaterare', 'squat-counter', 'hemmaracet', 'bambu-elegoo-profiler', 'plaud-syncthing', 'resolve-claude-mcp', 'kliniskt', 'vanskapsapp', 'medicinskt-snurrhjul', 'ada-zdrowa', 'bertils-halsoai', 'lilianas-salud', 'gym-3d-streaks'];
 
 const lasJson = (f, fb) => { try { return JSON.parse(fs.readFileSync(f, 'utf8').replace(/^﻿/, '')); } catch { return fb; } };
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -268,6 +269,12 @@ for (const a of lista) {
     else if ((l.typ === 'tailscale' || l.typ === 'lokal') && l.status === 'ej uppe') l.status = 'servern ej igång';
     else if (l.typ === 'vercel' && l.status === 'ej uppe' && a.id === 'the-work-list' && tsUppe) l.status = 'gammal adress';
   }
+}
+
+// Prio 1-4 (1 = platina ... 4 = brons): data/prio.start.json (startvärden) och data/prio.json (Marcs val, skrivs av servern) läses bara.
+for (const f of ['prio.start.json', 'prio.json']) {
+  const pr = lasJson(path.join(HEM, 'data', f), null);
+  if (arObj(pr)) for (const a of lista) { const v = pr[a.id]; if (Number.isInteger(v) && v >= 1 && v <= 4) a.prio = v; }
 }
 
 // Manuell sammanslagning (manuellt vinner).

@@ -107,6 +107,7 @@
     if (x.ordning !== undefined && x.ordning !== '' && y.ordning !== undefined && y.ordning !== '') { return Number(x.ordning) - Number(y.ordning); }
     return ms(y) - ms(x);
   }
+  function nyastAt(x, y) { return (window.HS_AT && HS_AT.cmp(x, y)) || nyast(x, y); }
   function postPrio(id, p, cb) {
     var x = new XMLHttpRequest();
     x.open('POST', 'api/prio', true);
@@ -164,13 +165,14 @@
   function matchar(a) {
     var hay;
     if (filter && a.kategori !== filter) { return false; }
+    if (window.HS_AT && !HS_AT.matcha(a)) { return false; }
     if (pfilt.length) {
       var gp = getPrio(a);
       if (!(gp ? pfilt.indexOf(String(gp)) >= 0 : pfilt.indexOf('x') >= 0)) { return false; }
     }
     if (!sokord) { return true; }
     hay = [a.namn, a.kategori, a.beskrivning].concat((a.lankar || []).map(function (l) { return l.etikett + ' ' + l.typ + ' ' + l.url; })).join(' ').toLowerCase();
-    return hay.indexOf(sokord) >= 0;
+    return hay.indexOf(sokord) >= 0 || !!(window.HS_AT && HS_AT.sok(a, sokord));
   }
 
   function chip(l, nf) {
@@ -224,6 +226,7 @@
       for (i = 0; i < lank.length; i++) { ch.appendChild(chip(lank[i], a.ny_flik)); }
       k.appendChild(ch);
     }
+    if (window.HS_AT) { HS_AT.dekorera(k, a); }
     return k;
   }
   function sektion(g, titel, lista, ny) {
@@ -301,13 +304,15 @@
   function renderHome() {
     var g = $('grid'), alla = effektiva(), vis, senaste, fast, gr = Date.now() - 7 * 86400000, kats;
     g.innerHTML = '';
+    if (window.HS_AT) { HS_AT.bar(); }
     $('rubrik').textContent = data.title || 'Hemskärm';
     renderFilter(alla);
     renderPFilter();
-    vis = alla.filter(matchar).sort(nyast);
+    vis = alla.filter(matchar).sort(nyastAt);
+    if (window.HS_AT) { HS_AT.recent(g, vis); }
     if (pfilt.length) {
       [1, 2, 3, 4, 0].forEach(function (n) {
-        var grp = vis.filter(function (a) { return getPrio(a) === n; }).sort(function (x, y) { return ms(y) - ms(x); });
+        var grp = vis.filter(function (a) { return getPrio(a) === n; }).sort(function (x, y) { return (window.HS_AT && HS_AT.cmp(x, y)) || ms(y) - ms(x); });
         sektion(g, n ? PIK[n] + ' ' + PN[n] + ' (' + grp.length + ')' : 'Ej satt (' + grp.length + ')', grp, n === 1);
       });
       if (!vis.length) { g.appendChild(el('p', 'msg', 'Inget matchar filtren.')); }
@@ -315,7 +320,7 @@
       visaStatus();
       return;
     }
-    senaste = vis.filter(function (a) { return ms(a) >= gr; });
+    senaste = vis.filter(function (a) { return ms(a) >= gr || (window.HS_AT && HS_AT.nyligen(a)); });
     fast = vis.filter(function (a) { return Number(a.fast_rank) > 0; }).sort(function (x, y) { return Number(x.fast_rank) - Number(y.fast_rank); });
     if (!filter && !sokord) { sektion(g, '📌 Fästa', fast, true); }
     if (!filter) { sektion(g, 'Senast använda (7 dagar)', senaste, true); }
@@ -459,6 +464,7 @@
       data = d; loadMan(); setup();
       try { var lokal = JSON.parse(load('hs_state') || 'null'); if (lokal) { tillampaState(lokal); } } catch (e) {}
       renderHome(); visa(vy); klar = true;
+      if (window.HS_AT) { HS_AT.init({ rerender: renderHome, vilkenApp: function (id) { var l = effektiva(), i; for (i = 0; i < l.length; i++) { if (l[i].id === id) { return l[i]; } } return null; } }); }
       fetch('api/state', { cache: 'no-store', credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
         if (j && j.state && Number(j.ts) > stTs) { tillampaState(j.state); stTs = Number(j.ts); store('hs_state_ts', String(stTs)); store('hs_state', JSON.stringify(j.state)); renderHome(); visa(vy); }
         else if (load('hs_state_dirty') === '1' || (stTs && stTs > Number((j && j.ts) || 0))) { pushState(); }

@@ -7,6 +7,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { skapaAuth, SESSION_SEK } from './lib/auth.js';
+import * as atg from './lib/atgarder.js';
 
 const ROT = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.HEMSKARM_PORT) || 5204;
@@ -22,6 +23,8 @@ const FILER = {
   '/robots.txt': 'text/plain; charset=utf-8',
   '/js/app.js': 'text/javascript; charset=utf-8',
   '/js/pbkdf2.js': 'text/javascript; charset=utf-8',
+  '/js/atgarder.js': 'text/javascript; charset=utf-8',
+  '/atgarder.css': 'text/css; charset=utf-8',
 };
 const CONFIG_JS = 'window.HS_CFG={login:false,logout:"logga-ut"};\n';
 fs.mkdirSync(path.join(ROT, 'data'), { recursive: true });
@@ -129,6 +132,7 @@ async function hantera(req, res) {
   if (!(arLokal(req) || auth.giltig(kaka(req)))) return omdirigera(res, `${PREFIX}/logga-in`);
   if (v === '/api/prio') return hanteraPrio(req, res);
   if (v === '/api/state') return hanteraState(req, res);
+  if (v === '/api/atgarder' || /^\/api\/atgarder\/[A-Za-z0-9_-]{1,64}\/klar$/.test(v)) return hanteraAtgarder(req, res, v);
   if (req.method !== 'GET' && req.method !== 'HEAD') return skicka(res, 405, 'Metod ej tillåten', undefined, { Allow: 'GET, HEAD' });
   if (v === '/js/config.js') return skickaFil(req, res, Buffer.from(CONFIG_JS), 'text/javascript; charset=utf-8');
   if (/^\/img\/preview\/[a-z0-9-]{1,80}\.jpg$/.test(v)) {
@@ -176,6 +180,33 @@ async function hanteraState(req, res) {
   const tmp = STATEFIL + '.tmp';
   try { fs.writeFileSync(tmp, JSON.stringify({ ts: b.ts, state: b.state })); fs.renameSync(tmp, STATEFIL); } catch (e) { console.error(e.message); return skicka(res, 500, 'Kunde inte spara'); }
   return skicka(res, 200, '{"ok":true}', 'application/json; charset=utf-8');
+}
+// ---- Åtgärder (data/atgarder.json): GET lista, POST skapa/uppdatera, POST /<id>/klar. Bara bakom sessionen (grinden i hantera).
+// POST kräver application/json (utlöser CORS-preflight korsorigin) och, om Origin finns, samma värd som Host.
+function samOrigin(req) {
+  const o = req.headers.origin;
+  if (!o) return true;
+  try { return new URL(o).host === String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim(); } catch { return false; }
+}
+async function hanteraAtgarder(req, res, v) {
+  const json = 'application/json; charset=utf-8';
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    try { return skicka(res, 200, JSON.stringify({ atgarder: atg.sorterad(atg.las()) }), json); } catch (e) { console.error(e.message); return skicka(res, 500, 'atgarder.json oläsbar'); }
+  }
+  if (req.method !== 'POST') return skicka(res, 405, 'Metod ej tillåten', undefined, { Allow: 'GET, HEAD, POST' });
+  if (!samOrigin(req)) return skicka(res, 403, 'Fel origin');
+  if (!/^application\/json/i.test(String(req.headers['content-type'] || ''))) return skicka(res, 415, 'Kräver application/json');
+  const m = /^\/api\/atgarder\/([A-Za-z0-9_-]{1,64})\/klar$/.exec(v);
+  try {
+    if (m) { await lasKropp(req, 2000); return skicka(res, 200, JSON.stringify({ ok: true, atgard: atg.markera(m[1]) }), json); }
+    let b;
+    try { b = JSON.parse(await lasKropp(req, 20000)); } catch { return skicka(res, 400, 'Ogiltig JSON'); }
+    return skicka(res, 200, JSON.stringify({ ok: true, atgard: atg.spara(b) }), json);
+  } catch (e) {
+    if (e.kod === 404) return skicka(res, 404, e.message);
+    if (/^(Ogiltig|Okänd|.* (saknas|måste|för lång|ser ut)|För många)/.test(e.message)) return skicka(res, 400, e.message);
+    console.error(e.message); return skicka(res, 500, 'Kunde inte spara');
+  }
 }
 // Daglig säkerhetskopia av prio.json (behåll 14).
 function backupPrio() {

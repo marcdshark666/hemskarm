@@ -1,0 +1,116 @@
+// Hemskärm privat: 127.0.0.1:5204, utåt bara via `tailscale serve --set-path /hemskarm` (tailnet, aldrig Funnel).
+// Husvakt-inloggning (samma hashfil som vanner/bt-start). Klientgrinden (auth.json) serveras ALDRIG här;
+// js/config.js serveras virtuellt med login:false så appen startar direkt efter Husvakt-login.
+import http from 'node:http';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { skapaAuth, SESSION_SEK } from './lib/auth.js';
+
+const ROT = path.dirname(fileURLToPath(import.meta.url));
+const PORT = Number(process.env.HEMSKARM_PORT) || 5204;
+const PREFIX = '/hemskarm';
+const COOKIE = 'hemskarm_session';
+const PROXYHUVUDEN = ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-real-ip', 'tailscale-user-login', 'tailscale-user-name'];
+// Vitlista: bara dessa webbfiler serveras (inte auth.json, tools/, test/, data/, server.mjs, .git).
+const FILER = {
+  '/index.html': 'text/html; charset=utf-8',
+  '/style.css': 'text/css; charset=utf-8',
+  '/apps.json': 'application/json; charset=utf-8',
+  '/apple-touch-icon.png': 'image/png',
+  '/robots.txt': 'text/plain; charset=utf-8',
+  '/js/app.js': 'text/javascript; charset=utf-8',
+  '/js/pbkdf2.js': 'text/javascript; charset=utf-8',
+};
+const CONFIG_JS = 'window.HS_CFG={login:false,logout:"logga-ut"};\n';
+fs.mkdirSync(path.join(ROT, 'data'), { recursive: true });
+const auth = skapaAuth({ inloggFil: path.join(ROT, '..', 'manadsavrakning', 'data', 'inloggning.json'), sessionFil: path.join(ROT, 'data', 'sessioner.json') });
+const INLOGG = fs.readFileSync(path.join(ROT, 'inlogg.html'), 'utf8');
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const proxad = (req) => PROXYHUVUDEN.some((h) => req.headers[h]);
+const arLokal = (req) => ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress) && !proxad(req);
+const klientIp = (req) => String(req.headers['x-forwarded-for'] || '').split(',')[0].trim().slice(0, 64) || req.socket.remoteAddress;
+const https = (req) => String(req.headers['x-forwarded-proto'] || '').toLowerCase() === 'https' || /\.ts\.net(:\d+)?$/i.test(req.headers.host || '');
+function skicka(res, kod, kropp, typ = 'text/plain; charset=utf-8', extra = {}) {
+  res.writeHead(kod, { 'Content-Type': typ, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'X-Robots-Tag': 'noindex, nofollow', ...extra });
+  res.end(kropp);
+}
+const omdirigera = (res, dit, extra = {}) => skicka(res, 303, '', 'text/plain; charset=utf-8', { Location: dit, ...extra });
+function kaka(req) {
+  for (const bit of String(req.headers.cookie || '').split(';')) {
+    const [k, ...v] = bit.trim().split('=');
+    if (k === COOKIE) return v.join('=');
+  }
+  return null;
+}
+const kakRad = (req, varde, maxAge) => `${COOKIE}=${varde}; Path=${PREFIX}; Max-Age=${maxAge}; HttpOnly; SameSite=Lax${https(req) ? '; Secure' : ''}`;
+function vag(req) {
+  let p;
+  try { p = decodeURIComponent(new URL(req.url, 'http://x').pathname || '/'); } catch { return null; }
+  return p === PREFIX || p.startsWith(`${PREFIX}/`) ? p.slice(PREFIX.length) || '/' : p;
+}
+function lasKropp(req, max = 10000) {
+  return new Promise((resolve) => {
+    let b = '';
+    req.on('data', (d) => { b += d; if (b.length > max) { b = ''; req.destroy(); } });
+    req.on('end', () => resolve(b));
+    req.on('error', () => resolve(''));
+  });
+}
+function visaInlogg(res, fel = '', kod = 200) {
+  const nonce = crypto.randomBytes(16).toString('base64url');
+  const html = INLOGG.replaceAll('{PREFIX}', PREFIX).replaceAll('{NONCE}', nonce).replace('{FEL}', fel ? `<div class="fel">${esc(fel)}</div>` : '');
+  skicka(res, kod, html, 'text/html; charset=utf-8', { 'Content-Security-Policy': `default-src 'none'; style-src 'nonce-${nonce}'; form-action 'self'; base-uri 'none'` });
+}
+// Statisk fil med Range-stöd (bytes=a-b, a-, -n).
+function skickaFil(req, res, data, typ) {
+  const storlek = data.length;
+  const r = /^bytes=(\d*)-(\d*)$/.exec(String(req.headers.range || ''));
+  const bas = { 'Accept-Ranges': 'bytes' };
+  if (!r || (!r[1] && !r[2])) {
+    return skicka(res, 200, req.method === 'HEAD' ? '' : data, typ, { ...bas, 'Content-Length': storlek });
+  }
+  let start = r[1] ? Number(r[1]) : Math.max(0, storlek - Number(r[2]));
+  let slut = r[1] && r[2] ? Math.min(Number(r[2]), storlek - 1) : storlek - 1;
+  if (start >= storlek || start > slut) return skicka(res, 416, '', typ, { ...bas, 'Content-Range': `bytes */${storlek}` });
+  const del = data.subarray(start, slut + 1);
+  return skicka(res, 206, req.method === 'HEAD' ? '' : del, typ, { ...bas, 'Content-Range': `bytes ${start}-${slut}/${storlek}`, 'Content-Length': del.length });
+}
+
+async function hantera(req, res) {
+  const v = vag(req);
+  if (v === null) return skicka(res, 400, 'Ogiltig sökväg');
+  if (v === '/api/halsa') return skicka(res, 200, '{"ok":true}', 'application/json');
+  if (v === '/logga-in') {
+    if (req.method !== 'POST') return visaInlogg(res);
+    const ip = klientIp(req);
+    const f = new URLSearchParams(await lasKropp(req));
+    if (auth.sparrad(ip)) return visaInlogg(res, 'För många felaktiga försök. Vänta 15 minuter.', 429);
+    if (!auth.kontrollera((f.get('epost') || '').slice(0, 200), (f.get('losen') || '').slice(0, 500))) {
+      auth.noteraFel(ip);
+      return visaInlogg(res, 'Fel e-post eller lösenord.', 401);
+    }
+    auth.rensaFel(ip);
+    return omdirigera(res, `${PREFIX}/`, { 'Set-Cookie': kakRad(req, auth.nySession(), SESSION_SEK) });
+  }
+  if (v === '/logga-ut') {
+    auth.taBort(kaka(req));
+    return omdirigera(res, `${PREFIX}/logga-in`, { 'Set-Cookie': kakRad(req, '', 0) });
+  }
+  if (!(arLokal(req) || auth.giltig(kaka(req)))) return omdirigera(res, `${PREFIX}/logga-in`);
+  if (req.method !== 'GET' && req.method !== 'HEAD') return skicka(res, 405, 'Metod ej tillåten', undefined, { Allow: 'GET, HEAD' });
+  if (v === '/js/config.js') return skickaFil(req, res, Buffer.from(CONFIG_JS), 'text/javascript; charset=utf-8');
+  const nyckel = v === '/' ? '/index.html' : v;
+  const typ = FILER[nyckel];
+  if (!typ) return skicka(res, 404, 'Hittas inte');
+  let data;
+  try { data = fs.readFileSync(path.join(ROT, nyckel.slice(1))); } catch { return skicka(res, 404, 'Hittas inte'); }
+  // <base> så relativa sökvägar fungerar även på /hemskarm utan avslutande snedstreck (Tailscale strippar prefixet).
+  if (nyckel === '/index.html') data = Buffer.from(data.toString('utf8').replace('<head>', `<head>\n<base href="${PREFIX}/">`));
+  return skickaFil(req, res, data, typ);
+}
+
+http.createServer((req, res) => {
+  hantera(req, res).catch((e) => { try { skicka(res, 500, 'Serverfel'); } catch {} console.error(e.message); });
+}).listen(PORT, '127.0.0.1', () => console.log(`Hemskärm lyssnar på 127.0.0.1:${PORT} (utåt: tailscale serve /hemskarm)`));

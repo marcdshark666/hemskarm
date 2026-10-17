@@ -159,6 +159,17 @@
   }
 
   function init() {
+    var cfg = window.HS_CFG || { login: true };
+    if (cfg.login === false) {
+      /* Privat variant: servern har redan krävt Husvakt-login. Ingen auth.json. */
+      getJSON('apps.json', function (r) {
+        repo = r;
+        if (!repo) { show('login'); $('loginform').style.display = 'none'; $('loginmsg').innerHTML = 'Kunde inte läsa apps.json. Ladda om.'; return; }
+        startApp();
+        on('logoutbtn', function () { location.href = cfg.logout || 'logga-ut'; });
+      });
+      return;
+    }
     getJSON('auth.json', function (a) {
       auth = a;
       getJSON('apps.json', function (r) {

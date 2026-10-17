@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hemskärm · logga in</title>
+<style nonce="{NONCE}">
+:root{--bg:#f6f7f9;--panel:#fff;--text:#14171c;--muted:#5f6773;--line:#e2e5ea;--acc:#2f6fed;--red:#c0392b}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--panel:#171a21;--text:#e8eaee;--muted:#9aa2ae;--line:#2a2f3a;--acc:#6b9bff;--red:#ff7b6b}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.kort{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 22px}
+h1{font-size:20px;margin:0 0 4px}p{color:var(--muted);margin:0 0 16px;font-size:14px}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:16px}
+input:focus{outline:2px solid var(--acc);border-color:transparent}
+button{margin-top:18px;width:100%;padding:12px;border:0;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;background:var(--acc);color:#fff}
+.fel{border:1px solid var(--red);color:var(--red);padding:10px 12px;border-radius:10px;font-size:14px;margin-bottom:6px}
+</style></head><body>
+<form class="kort" method="post" action="{PREFIX}/logga-in">
+<h1>Hemskärm</h1>
+<p>Logga in med samma uppgifter som Husvakten.</p>
+{FEL}
+<label for="e">E-post</label>
+<input id="e" name="epost" type="email" autocomplete="username" required autofocus>
+<label for="l">Lösenord</label>
+<input id="l" name="losen" type="password" autocomplete="current-password" required>
+<button type="submit">Logga in</button>
+</form></body></html>
+

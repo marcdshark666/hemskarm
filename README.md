@@ -9,4 +9,8 @@ Statisk hemskarm med stora knappar till favoritappar, byggd for gamla iPads (ren
 - `tools/make-auth.js` skapar `auth.json` (laser ~/.husvakten, skriver inte ut nagot). `tools/make-auth.js --test e l` for test.
 - Test: `PYTHONIOENCODING=utf-8 python test/test.py <epost> <losen>` (playwright, 1024x768, 768x1024, 412).
 - Rollback: `git revert` / checka ut foregaende commit eller tagg och pusha.
-- Hosting: GitHub Pages (gratis, publikt repo).
+- Hosting (2026-10-17): PRIVAT pa Tailscale, https://desktop-r13nmtb.tailf9ee87.ts.net/hemskarm/ bakom Husvakt-login. GitHub Pages avstangt 2026-10-17 (publicerades av misstag); repot marcdshark666/hemskarm ska raderas. Pusha ALDRIG hit igen.
+- Server: `server.mjs` (127.0.0.1:5204, lib/auth.js = samma Husvakt-hash som vanner, sessioner i data/). Vitlista av webbfiler; auth.json serveras aldrig. `js/config.js` serveras virtuellt med login:false, sa klientgrinden ar av.
+- Start (aven efter omstart av datorn, ingen autostart): `powershell -ExecutionPolicy Bypass -File starta.ps1`. Route: `tailscale serve --bg --set-path /hemskarm http://127.0.0.1:5204` (ligger kvar). Kor tailscale-kommandon i PowerShell, inte Git Bash (MSYS skriver om /hemskarm till en filsokvag).
+- Test privat: `PYTHONIOENCODING=utf-8 python test/test_privat.py`.
+- iPad: kraver Tailscale-appen (iPadOS 16.6+).

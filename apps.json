@@ -1,0 +1,11 @@
+{
+ "title": "Hemskärm",
+ "rev": 1,
+ "apps": [
+  {"name": "MedHop", "icon": "🩺", "url": "https://medhop.vercel.app/", "color": "#2e7d6b", "group": "Medicin"},
+  {"name": "Cynergi", "icon": "💊", "url": "https://cynergi-med-flow.vercel.app/", "color": "#3a6ea5", "group": "Medicin"},
+  {"name": "Synergi-checklista", "icon": "✅", "url": "https://synergy-application-regarding.vercel.app/", "color": "#7a5ea8", "group": "Medicin"},
+  {"name": "Quiz Rush", "icon": "🎮", "url": "https://quiz-rush-game.vercel.app/", "color": "#c0602b", "group": "Spel"},
+  {"name": "Husvakten", "icon": "🏠", "url": "https://marcdshark666.github.io/husvakten/", "color": "#4a7c3a", "group": "Hem"}
+ ]
+}

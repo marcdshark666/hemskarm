@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<title>Hemskärm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Hemskärm">
+<meta name="robots" content="noindex,nofollow">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<noscript><p class="msg">JavaScript krävs.</p></noscript>
+
+<div id="login" class="vy" style="display:none">
+  <h1>Hemskärm</h1>
+  <form id="loginform" action="#" onsubmit="return false">
+    <label for="epost">E-post</label>
+    <input id="epost" type="email" autocapitalize="off" autocorrect="off" autocomplete="username">
+    <label for="losen">Lösenord</label>
+    <input id="losen" type="password" autocapitalize="off" autocorrect="off" autocomplete="current-password">
+    <button id="loginbtn" type="submit" class="stor">Logga in</button>
+    <p id="loginmsg" class="msg">&nbsp;</p>
+  </form>
+</div>
+
+<div id="home" class="vy" style="display:none">
+  <div class="topp">
+    <h1 id="rubrik">Hemskärm</h1>
+    <a href="#" id="editbtn" class="liten">Redigera</a>
+  </div>
+  <div id="grid"></div>
+</div>
+
+<div id="edit" class="vy" style="display:none">
+  <div class="topp">
+    <h1>Redigera</h1>
+    <a href="#" id="donebtn" class="liten">Klar</a>
+  </div>
+  <div id="editlist"></div>
+  <div class="rad">
+    <a href="#" id="addbtn" class="liten">+ Lägg till</a>
+    <a href="#" id="exportbtn" class="liten">Visa JSON</a>
+    <a href="#" id="resetbtn" class="liten">Återställ</a>
+    <a href="#" id="logoutbtn" class="liten">Logga ut</a>
+  </div>
+  <textarea id="jsonbox" rows="8" style="display:none" readonly></textarea>
+  <p class="msg">Ändringar sparas bara på den här enheten. För att göra dem permanenta: Visa JSON och skicka till Boss.</p>
+</div>
+
+<script src="js/pbkdf2.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>

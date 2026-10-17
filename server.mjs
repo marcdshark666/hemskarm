@@ -80,6 +80,12 @@ function skickaFil(req, res, data, typ) {
 
 // Prio 1-4 (1 = platina) per app-id, delas mellan enheter. Skrivs atomiskt till data/prio.json. Bara bakom sessionen (grinden ovan).
 const PRIOFIL = path.join(ROT, 'data', 'prio.json');
+function lasPrioStrikt() {
+  if (!fs.existsSync(PRIOFIL)) return {};
+  const o = JSON.parse(fs.readFileSync(PRIOFIL, 'utf8'));
+  if (!o || typeof o !== 'object' || Array.isArray(o)) throw new Error('prio.json ogiltig');
+  return o;
+}
 function lasPrio() { try { const o = JSON.parse(fs.readFileSync(PRIOFIL, 'utf8')); return o && typeof o === 'object' && !Array.isArray(o) ? o : {}; } catch { return {}; } }
 function appIds() { try { return new Set((JSON.parse(fs.readFileSync(path.join(ROT, 'apps.json'), 'utf8')).apps || []).map((a) => String(a.id))); } catch { return new Set(); } }
 async function hanteraPrio(req, res) {
@@ -92,7 +98,8 @@ async function hanteraPrio(req, res) {
   const p = b ? b.prio : undefined;
   if (!id || id.length > 100 || !appIds().has(id)) return skicka(res, 400, 'Okänt id');
   if (!(p === null || (Number.isInteger(p) && p >= 1 && p <= 4))) return skicka(res, 400, 'prio måste vara 1-4 eller null');
-  const nu = lasPrio();
+  let nu;
+  try { nu = lasPrioStrikt(); } catch (e) { console.error(e.message); return skicka(res, 500, 'prio.json oläsbar, skriver inte över'); }
   if (p === null) delete nu[id]; else nu[id] = p;
   const tmp = PRIOFIL + '.tmp';
   try { fs.writeFileSync(tmp, JSON.stringify(nu, null, 1)); fs.renameSync(tmp, PRIOFIL); } catch (e) { console.error(e.message); return skicka(res, 500, 'Kunde inte spara'); }
@@ -121,6 +128,7 @@ async function hantera(req, res) {
   }
   if (!(arLokal(req) || auth.giltig(kaka(req)))) return omdirigera(res, `${PREFIX}/logga-in`);
   if (v === '/api/prio') return hanteraPrio(req, res);
+  if (v === '/api/state') return hanteraState(req, res);
   if (req.method !== 'GET' && req.method !== 'HEAD') return skicka(res, 405, 'Metod ej tillåten', undefined, { Allow: 'GET, HEAD' });
   if (v === '/js/config.js') return skickaFil(req, res, Buffer.from(CONFIG_JS), 'text/javascript; charset=utf-8');
   if (/^\/img\/preview\/[a-z0-9-]{1,80}\.jpg$/.test(v)) {
@@ -141,3 +149,46 @@ async function hantera(req, res) {
 http.createServer((req, res) => {
   hantera(req, res).catch((e) => { try { skicka(res, 500, 'Serverfel'); } catch {} console.error(e.message); });
 }).listen(PORT, '127.0.0.1', () => console.log(`Hemskärm lyssnar på 127.0.0.1:${PORT} (utåt: tailscale serve /hemskarm)`));
+
+// ---- UI-state (filter, vy, redigeringar) delas mellan enheter: data/state.json {ts, state}. Bara bakom sessionen.
+const STATEFIL = path.join(ROT, 'data', 'state.json');
+const VYER = new Set(['home', 'prio', 'edit']);
+function lasState() { try { const o = JSON.parse(fs.readFileSync(STATEFIL, 'utf8')); return o && typeof o.ts === 'number' ? o : { ts: 0, state: null }; } catch { return { ts: 0, state: null }; } }
+function giltigtState(s) {
+  if (!s || typeof s !== 'object' || Array.isArray(s)) return false;
+  if (!Array.isArray(s.pfilt) || s.pfilt.length > 5 || !s.pfilt.every((x) => ['1', '2', '3', '4', 'x'].includes(x))) return false;
+  if (typeof s.kat !== 'string' || s.kat.length > 80 || typeof s.sok !== 'string' || s.sok.length > 200) return false;
+  if (typeof s.pv !== 'boolean' || !VYER.has(s.vy)) return false;
+  const m = s.man;
+  if (!m || typeof m !== 'object' || !m.overrides || typeof m.overrides !== 'object' || Array.isArray(m.overrides) || !Array.isArray(m.nya) || !Array.isArray(m.dolda)) return false;
+  if (m.nya.length > 200 || m.dolda.length > 500) return false;
+  return true;
+}
+async function hanteraState(req, res) {
+  if (req.method === 'GET' || req.method === 'HEAD') return skicka(res, 200, JSON.stringify(lasState()), 'application/json; charset=utf-8');
+  if (req.method !== 'POST') return skicka(res, 405, 'Metod ej tillåten', undefined, { Allow: 'GET, HEAD, POST' });
+  if (!/^application\/json/i.test(String(req.headers['content-type'] || ''))) return skicka(res, 415, 'Kräver application/json');
+  let b;
+  try { b = JSON.parse(await lasKropp(req, 300000)); } catch { return skicka(res, 400, 'Ogiltig JSON'); }
+  if (!b || typeof b.ts !== 'number' || !Number.isFinite(b.ts) || !giltigtState(b.state)) return skicka(res, 400, 'Ogiltigt state');
+  const nu = lasState();
+  if (b.ts < nu.ts) return skicka(res, 409, JSON.stringify(nu), 'application/json; charset=utf-8');
+  const tmp = STATEFIL + '.tmp';
+  try { fs.writeFileSync(tmp, JSON.stringify({ ts: b.ts, state: b.state })); fs.renameSync(tmp, STATEFIL); } catch (e) { console.error(e.message); return skicka(res, 500, 'Kunde inte spara'); }
+  return skicka(res, 200, '{"ok":true}', 'application/json; charset=utf-8');
+}
+// Daglig säkerhetskopia av prio.json (behåll 14).
+function backupPrio() {
+  try {
+    const o = lasPrioStrikt();
+    if (!Object.keys(o).length) return;
+    const dir = path.join(ROT, 'data', 'backup');
+    fs.mkdirSync(dir, { recursive: true });
+    const f = path.join(dir, `prio-${new Date().toISOString().slice(0, 10)}.json`);
+    if (!fs.existsSync(f)) fs.copyFileSync(PRIOFIL, f);
+    const alla = fs.readdirSync(dir).filter((n) => /^prio-\d{4}-\d{2}-\d{2}\.json$/.test(n)).sort();
+    for (const n of alla.slice(0, Math.max(0, alla.length - 14))) fs.unlinkSync(path.join(dir, n));
+  } catch (e) { console.error('backup: ' + e.message); }
+}
+backupPrio();
+setInterval(backupPrio, 3600 * 1000).unref();

@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
-  var prio = null, pfilt = '', pkat = '', psok = '', PIK = { 1: '💎', 2: '🥇', 3: '🥈', 4: '🥉' }, PN = { 1: 'Platina', 2: 'Guld', 3: 'Silver', 4: 'Brons' };
+  var prio = null, pfilt = [], vy = 'home', klar = false, stTs = Number(load('hs_state_ts') || 0), stTimer = null, statusTxt = '', pkat = '', psok = '', PIK = { 1: '💎', 2: '🥇', 3: '🥈', 4: '🥉' }, PN = { 1: 'Platina', 2: 'Guld', 3: 'Silver', 4: 'Brons' };
   var data = null, man = { overrides: {}, nya: [], dolda: [] }, filter = '', sokord = '';
   var FARG = { 'Viktiga hemsidor': '#b5651d', 'Medicin & utbildning': '#2e7d6b', 'Diabetes & hälsa': '#c0475a', 'Ekonomi & affär': '#b08a2e', 'Hem & vardag': '#4a7c3a', 'Spel & quiz': '#c0602b', '3D-print & hobby': '#7a5ea8', 'Verktyg & AI': '#3a6ea5', 'Kommunikation & vänner': '#2b8aa0', 'Jobb & karriär': '#6f7a8a', 'Övrigt': '#6f7a8a' };
   var IKON = { tailscale: '🔒', github: '⚫', vercel: '▲', supabase: '🟢', base44: '🟣', lokal: '🖥️', annat: '🔗' };
@@ -13,7 +13,36 @@
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (text !== undefined) { e.textContent = text; } return e; }
   function safeUrl(u) { u = String(u || '').trim(); return /^https?:\/\//i.test(u) ? u : ''; }
-  function show(id) { ['home', 'edit', 'prio'].forEach(function (x) { $(x).style.display = x === id ? 'block' : 'none'; }); window.scrollTo(0, 0); }
+  function show(id) { ['home', 'edit', 'prio'].forEach(function (x) { $(x).style.display = x === id ? 'block' : 'none'; }); window.scrollTo(0, 0); vy = id; if (klar) { stateChanged(); } }
+  function stateObj() { return { pfilt: pfilt, kat: filter, sok: sokord, pv: visaPv, vy: vy, man: man }; }
+  function stateChanged() {
+    stTs = Date.now(); store('hs_state_ts', String(stTs));
+    store('hs_state', JSON.stringify(stateObj()));
+    if (stTimer) { clearTimeout(stTimer); }
+    stTimer = setTimeout(pushState, 400);
+  }
+  function visaStatus() { var s = $('stampel'); if (s && statusTxt) { s.textContent = statusTxt; } }
+  function pushState() {
+    var x = new XMLHttpRequest();
+    x.open('POST', 'api/state', true);
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) { return; }
+      if (x.status === 200) { statusTxt = ''; store('hs_state_dirty', null); }
+      else if (x.status === 409) { store('hs_state_dirty', null); }
+      else { store('hs_state_dirty', '1'); statusTxt = 'Ändringar sparades lokalt (servern nåddes inte). Skickas igen vid nästa laddning.'; visaStatus(); }
+    };
+    try { x.send(JSON.stringify({ ts: stTs, state: stateObj() })); } catch (e) { store('hs_state_dirty', '1'); }
+  }
+  function tillampaState(s) {
+    if (!s || typeof s !== 'object') { return; }
+    if (s.pfilt && s.pfilt.length !== undefined) { pfilt = s.pfilt.filter(function (v) { return ['1', '2', '3', '4', 'x'].indexOf(v) >= 0; }); }
+    if (typeof s.kat === 'string') { filter = s.kat; }
+    if (typeof s.sok === 'string') { sokord = s.sok; $('sok').value = s.sok; }
+    if (typeof s.pv === 'boolean') { visaPv = s.pv; store('hs_pv', visaPv ? '1' : '0'); }
+    if (s.man && s.man.overrides && s.man.nya && s.man.dolda) { man = { overrides: s.man.overrides, nya: s.man.nya, dolda: s.man.dolda }; store('hs_manuell', JSON.stringify(man)); }
+    if (['home', 'prio', 'edit'].indexOf(s.vy) >= 0) { vy = s.vy; }
+  }
 
   function loadMan() {
     try {
@@ -21,7 +50,7 @@
       if (m && m.overrides) { man = { overrides: m.overrides, nya: m.nya || [], dolda: m.dolda || [] }; }
     } catch (e) {}
   }
-  function saveMan() { store('hs_manuell', JSON.stringify(man)); }
+  function saveMan() { store('hs_manuell', JSON.stringify(man)); if (klar) { stateChanged(); } }
 
   function norm(a) {
     var u, dom = '';
@@ -135,8 +164,10 @@
   function matchar(a) {
     var hay;
     if (filter && a.kategori !== filter) { return false; }
-    if (pfilt === 'x' && getPrio(a)) { return false; }
-    if (pfilt && pfilt !== 'x' && getPrio(a) !== Number(pfilt)) { return false; }
+    if (pfilt.length) {
+      var gp = getPrio(a);
+      if (!(gp ? pfilt.indexOf(String(gp)) >= 0 : pfilt.indexOf('x') >= 0)) { return false; }
+    }
     if (!sokord) { return true; }
     hay = [a.namn, a.kategori, a.beskrivning].concat((a.lankar || []).map(function (l) { return l.etikett + ' ' + l.typ + ' ' + l.url; })).join(' ').toLowerCase();
     return hay.indexOf(sokord) >= 0;
@@ -211,21 +242,29 @@
     function knapp(txt, v) {
       var b = el('button', 'fknapp' + (filter === v ? ' pa' : ''), txt);
       b.type = 'button';
-      b.onclick = function () { filter = v; renderHome(); };
+      b.onclick = function () { filter = v; stateChanged(); renderHome(); };
       f.appendChild(b);
     }
     knapp('Alla', '');
     for (i = 0; i < kats.length; i++) { knapp(kats[i], kats[i]); }
   }
   function renderPFilter() {
-    var f = $('pfilter'), v = [['', 'Alla prio'], ['1', PIK[1] + ' 1'], ['2', PIK[2] + ' 2'], ['3', PIK[3] + ' 3'], ['4', PIK[4] + ' 4'], ['x', 'Ej satt']];
+    var f = $('pfilter'), v = [['1', PIK[1] + ' 1'], ['2', PIK[2] + ' 2'], ['3', PIK[3] + ' 3'], ['4', PIK[4] + ' 4'], ['x', 'Ej satt']], b;
     f.innerHTML = '';
+    b = el('button', 'fknapp' + (!pfilt.length ? ' pa' : ''), 'Alla');
+    b.type = 'button'; b.onclick = function () { pfilt = []; stateChanged(); renderHome(); }; f.appendChild(b);
     v.forEach(function (e) {
-      var b = el('button', 'fknapp' + (pfilt === e[0] ? ' pa' : ''), e[1]);
-      b.type = 'button';
-      b.onclick = function () { pfilt = e[0]; renderHome(); };
-      f.appendChild(b);
+      var on = pfilt.indexOf(e[0]) >= 0, k = el('button', 'fknapp' + (on ? ' pa' : ''), e[1]);
+      k.type = 'button'; k.setAttribute('aria-pressed', on ? 'true' : 'false');
+      k.onclick = function () {
+        var i = pfilt.indexOf(e[0]);
+        if (i >= 0) { pfilt.splice(i, 1); } else { pfilt.push(e[0]); }
+        stateChanged(); renderHome();
+      };
+      f.appendChild(k);
     });
+    b = el('button', 'fknapp', 'Alla prio 1\u20134');
+    b.type = 'button'; b.onclick = function () { pfilt = ['1', '2', '3', '4']; stateChanged(); renderHome(); }; f.appendChild(b);
   }
   function renderPrio() {
     var alla = effektiva(), box = $('plist'), cnt = [0, 0, 0, 0, 0], sel = $('pvsel'), kats = (data.kategorier || []).slice(), q = psok, y;
@@ -265,6 +304,16 @@
     renderFilter(alla);
     renderPFilter();
     vis = alla.filter(matchar).sort(nyast);
+    if (pfilt.length) {
+      [1, 2, 3, 4, 0].forEach(function (n) {
+        var grp = vis.filter(function (a) { return getPrio(a) === n; }).sort(function (x, y) { return ms(y) - ms(x); });
+        sektion(g, n ? PIK[n] + ' ' + PN[n] + ' (' + grp.length + ')' : 'Ej satt (' + grp.length + ')', grp, n === 1);
+      });
+      if (!vis.length) { g.appendChild(el('p', 'msg', 'Inget matchar filtren.')); }
+      $('stampel').textContent = vis.length + ' av ' + alla.length + ' appar visas, rangordnade efter prio.';
+      visaStatus();
+      return;
+    }
     senaste = vis.filter(function (a) { return ms(a) >= gr; });
     fast = vis.filter(function (a) { return Number(a.fast_rank) > 0; }).sort(function (x, y) { return Number(x.fast_rank) - Number(y.fast_rank); });
     if (!filter && !sokord) { sektion(g, '📌 Fästa', fast, true); }
@@ -273,6 +322,7 @@
     vis.forEach(function (a) { if (kats.indexOf(a.kategori) < 0) { kats.push(a.kategori); } });
     kats.forEach(function (k) { sektion(g, k, vis.filter(function (a) { return a.kategori === k; }), false); });
     if (!vis.length) { g.appendChild(el('p', 'msg', 'Inget matchar sökningen.')); }
+    visaStatus();
     $('stampel').textContent = alla.length + ' appar i ' + kats.length + ' kategorier. Lista byggd ' + (data.genererad ? data.genererad.slice(0, 16).replace('T', ' ') : '?') + ' UTC (rev ' + data.rev + ').';
   }
 
@@ -374,7 +424,7 @@
     }
   }
   function setup() {
-    $('pvbtn').onclick = function () { visaPv = !visaPv; store('hs_pv', visaPv ? '1' : '0'); $('pvbtn').textContent = visaPv ? 'Dölj förhandsvisning' : 'Visa förhandsvisning'; renderHome(); return false; };
+    $('pvbtn').onclick = function () { visaPv = !visaPv; store('hs_pv', visaPv ? '1' : '0'); stateChanged(); $('pvbtn').textContent = visaPv ? 'Dölj förhandsvisning' : 'Visa förhandsvisning'; renderHome(); return false; };
     $('pvbtn').textContent = visaPv ? 'Dölj förhandsvisning' : 'Visa förhandsvisning';
     $('priobtn').onclick = function () { renderPrio(); show('prio'); return false; };
     $('pdonebtn').onclick = function () { renderHome(); show('home'); return false; };
@@ -392,16 +442,26 @@
       try { b.select(); } catch (e) {}
       return false;
     };
-    $('resetbtn').onclick = function () { man = { overrides: {}, nya: [], dolda: [] }; store('hs_manuell', null); renderEdit(); return false; };
+    $('resetbtn').onclick = function () { man = { overrides: {}, nya: [], dolda: [] }; store('hs_manuell', null); stateChanged(); renderEdit(); return false; };
     $('logoutbtn').onclick = function () { location.href = (window.HS_CFG && window.HS_CFG.logout) || 'logga-ut'; return false; };
-    $('sok').oninput = function () { sokord = this.value.trim().toLowerCase(); renderHome(); };
+    $('sok').oninput = function () { sokord = this.value.trim().toLowerCase(); stateChanged(); renderHome(); };
+  }
+  function visa(id) {
+    if (id === 'prio') { renderPrio(); } else if (id === 'edit') { renderEdit(); }
+    show(id);
   }
   function init() {
     fetch('apps.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) {
       if (!r.ok) { throw new Error('http ' + r.status); }
       return r.json();
     }).then(function (d) {
-      data = d; loadMan(); setup(); renderHome(); show('home');
+      data = d; loadMan(); setup();
+      try { var lokal = JSON.parse(load('hs_state') || 'null'); if (lokal) { tillampaState(lokal); } } catch (e) {}
+      renderHome(); visa(vy); klar = true;
+      fetch('api/state', { cache: 'no-store', credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+        if (j && j.state && Number(j.ts) > stTs) { tillampaState(j.state); stTs = Number(j.ts); store('hs_state_ts', String(stTs)); store('hs_state', JSON.stringify(j.state)); renderHome(); visa(vy); }
+        else if (load('hs_state_dirty') === '1' || (stTs && stTs > Number((j && j.ts) || 0))) { pushState(); }
+      }).catch(function () {});
       return fetch('api/prio', { cache: 'no-store', credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
         if (j && j.prio) { prio = j.prio; renderHome(); skickaVantande(); }
       }).catch(function () {});
